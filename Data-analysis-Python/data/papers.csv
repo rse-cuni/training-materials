@@ -2,7 +2,7 @@ paper_id,title,year,field,citations,authors,journal_impact,country,open_access
 P0001,A Study of Chemistry Trends 30,2014,Chemistry,9.0,9,2.58,Australia,False
 P0002,The Future of Physics 56,2014,Physics,60.0,7,13.49,Germany,True
 P0003,The Future of Physics 98,2023,Physics,,3,4.24,France,True
-P0004,The Future of Chemistry 57,2017,Chemistry,18.0,10,5.77,UK,False
+P0004,The Future of Chemistry 57,2017,Chemistry,18.0,10,null,UK,False
 P0005,Impact of Computer Science on Society 89,2023,Computer Science,3.0,2,3.16,France,True
 P0006,A Study of Biology Trends 4,2021,Biology,3.0,3,13.8,Brazil,True
 P0007,Advances in Biology 42,2020,Biology,1.0,8,5.29,China,True
@@ -13,7 +13,7 @@ P0011,New Methods in Chemistry 68,2012,Chemistry,0.0,9,1.45,India,True
 P0012,A Review of Chemistry Literature 73,2014,Chemistry,70.0,9,2.14,Japan,True
 P0013,Impact of Medicine on Society 22,2021,Medicine,35.0,2,7.44,Australia,True
 P0014,Impact of Physics on Society 11,2017,Physics,,2,12.76,Australia,True
-P0015,A Review of Medicine Literature 80,2022,Medicine,4.0,8,4.59,Canada,True
+P0015,A Review of Medicine Literature 80,2022,nan,4.0,8,4.59,Canada,True
 P0016,New Methods in Economics 64,2023,Economics,,3,5.55,UK,False
 P0017,Impact of Physics on Society 30,2015,Physics,7.0,10,8.83,Canada,False
 P0018,Empirical Analysis of Physics 82,2014,Physics,14.0,9,7.87,France,False
@@ -24,7 +24,7 @@ P0022,A Study of Medicine Trends 87,2020,Medicine,3.0,7,8.56,Canada,False
 P0023,Experimental Medicine 21,2011,Medicine,6.0,6,1.53,UK,True
 P0024,The Future of Physics 57,2013,Physics,9.0,1,4.88,USA,True
 P0025,Challenges in Medicine 76,2017,Medicine,12.0,9,,Brazil,False
-P0026,A Study of Biology Trends 82,2013,Biology,30.0,7,9.06,France,False
+P0026,A Study of Biology Trends 82,2013,Biology,30.0,7,9.06,nan,False
 P0027,A Review of Chemistry Literature 89,2023,Chemistry,4.0,4,3.96,India,False
 P0028,A Study of Chemistry Trends 59,2016,Chemistry,14.0,8,4.03,China,True
 P0029,A Study of Chemistry Trends 26,2021,Chemistry,17.0,7,2.81,Germany,False
@@ -40,10 +40,10 @@ P0038,Advances in Physics 78,2022,Physics,2.0,4,10.56,India,False
 P0039,Empirical Analysis of Sociology 37,2012,Sociology,23.0,2,,Japan,False
 P0040,New Methods in Sociology 78,2011,Sociology,11.0,5,10.21,Germany,True
 P0041,Challenges in Biology 29,2014,Biology,2.0,10,11.22,Germany,False
-P0042,New Methods in Chemistry 80,2021,Chemistry,13.0,9,10.82,Japan,True
+P0042,New Methods in Chemistry 80,2021,Chemistry,13.0,null,10.82,Japan,True
 P0043,A Study of Economics Trends 87,2018,Economics,0.0,7,12.63,China,False
 P0044,Impact of Computer Science on Society 81,2016,Computer Science,48.0,5,2.16,Brazil,False
-P0045,The Future of Computer Science 81,2012,Computer Science,5.0,4,9.14,Canada,True
+P0045,The Future of Computer Science 81,2012,Computer Science,5.0,null,9.14,Canada,True
 P0046,Advances in Biology 40,2022,Biology,21.0,1,5.22,Japan,False
 P0047,Empirical Analysis of Biology 5,2023,Biology,7.0,1,1.92,Australia,True
 P0048,Challenges in Sociology 94,2018,Sociology,14.0,10,6.96,USA,True
@@ -362,9 +362,9 @@ P0360,Experimental Biology 3,2021,Biology,17.0,6,7.55,Japan,False
 P0361,Experimental Economics 74,2018,Economics,9.0,6,13.34,Brazil,False
 P0362,New Methods in Economics 92,2019,Economics,20.0,9,6.85,France,True
 P0363,Impact of Economics on Society 38,2018,Economics,12.0,8,3.25,Germany,True
-P0364,A Review of Biology Literature 1,2015,Biology,15.0,8,1.02,USA,True
+P0364,A Review of Biology Literature 1,2015,Biology,15.0,8,null,USA,True
 P0365,Challenges in Sociology 31,2016,Sociology,56.0,2,0.87,USA,False
-P0366,A Review of Economics Literature 24,2020,Economics,9.0,7,14.95,Brazil,False
+P0366,A Review of Economics Literature 24,2020,NAN,9.0,7,14.95,Brazil,False
 P0367,The Future of Physics 68,2012,Physics,,10,3.96,Australia,True
 P0368,Challenges in Biology 9,2015,Biology,47.0,5,6.14,Japan,False
 P0369,Experimental Economics 70,2017,Economics,4.0,8,11.99,China,True
@@ -420,10 +420,10 @@ P0418,Empirical Analysis of Biology 6,2012,Biology,7.0,3,14.49,India,True
 P0419,Challenges in Medicine 79,2013,Medicine,22.0,2,3.59,China,True
 P0420,A Review of Medicine Literature 36,2021,Medicine,27.0,7,,India,True
 P0421,Advances in Physics 10,2020,Physics,31.0,5,3.01,UK,True
-P0422,A Review of Medicine Literature 47,2020,Medicine,,4,1.42,France,True
+P0422,None,2020,Medicine,,4,1.42,France,True
 P0423,Experimental Physics 96,2010,Physics,1.0,4,4.47,Brazil,True
 P0424,Impact of Economics on Society 4,2014,Economics,13.0,5,,Canada,False
-P0425,Impact of Chemistry on Society 78,2016,Chemistry,1.0,8,2.94,Australia,True
+P0425,Impact of Chemistry on Society 78,2016,Chemistry,null,8,2.94,Australia,True
 P0426,Empirical Analysis of Medicine 5,2020,Medicine,15.0,3,5.86,Brazil,True
 P0427,Impact of Medicine on Society 9,2011,Medicine,11.0,3,2.89,Brazil,True
 P0428,New Methods in Medicine 100,2020,Medicine,43.0,9,4.03,Canada,False
@@ -461,11 +461,11 @@ P0459,Experimental Biology 29,2012,Biology,1.0,7,8.59,Australia,False
 P0460,The Future of Computer Science 26,2010,Computer Science,2.0,5,3.28,Japan,False
 P0461,Impact of Computer Science on Society 31,2018,Computer Science,2.0,3,14.81,USA,True
 P0462,Empirical Analysis of Biology 4,2017,Biology,20.0,5,14.66,Brazil,False
-P0463,Challenges in Economics 71,2013,Economics,27.0,1,9.47,Germany,False
+P0463,None,2013,Economics,27.0,1,9.47,Germany,False
 P0464,Challenges in Sociology 60,2021,Sociology,17.0,1,13.01,UK,True
-P0465,Experimental Medicine 17,2017,Medicine,65.0,9,14.81,France,False
+P0465,Experimental Medicine 17,2017,nan,65.0,9,14.81,France,False
 P0466,The Future of Chemistry 9,2015,Chemistry,9.0,3,7.86,Japan,False
-P0467,A Study of Computer Science Trends 51,2013,Computer Science,6.0,6,7.23,France,True
+P0467,A Study of Computer Science Trends 51,2013,Computer Science,null,6,7.23,France,True
 P0468,Empirical Analysis of Medicine 68,2010,Medicine,40.0,5,9.58,Japan,True
 P0469,A Review of Sociology Literature 99,2010,Sociology,5.0,8,3.52,Japan,True
 P0470,A Review of Chemistry Literature 74,2020,Chemistry,,9,1.27,India,False
