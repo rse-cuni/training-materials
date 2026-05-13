@@ -1,0 +1,1 @@
+[Záznam lekce](https://cunicz-my.sharepoint.com/:v:/g/personal/11342192_cuni_cz/IQAaOWh2W3_FSIDBW-tYOqH0AVU2cUUYFu-E--IW_b24ssI?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=EMhJKc)
