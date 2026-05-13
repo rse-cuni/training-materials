@@ -1,0 +1,24 @@
+{
+  "providers": {
+    "einfra": {
+      "name": "E-Infra",
+      "baseUrl": "https://llm.ai.e-infra.cz/v1",
+      "apiKey": "tady bude vas API klic",
+      "api": "openai-completions",
+      "compat": {
+        "supportsDeveloperRole": false
+      },
+      "models": [
+        {
+          "id": "kimi-k2.6",
+          "name": "Kimi K2.6",
+          "reasoning": false,
+          "input": ["text", "image"],
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+          "contextWindow": 262144,
+          "maxTokens": 8192
+        }
+      ]
+    }
+  }
+}
