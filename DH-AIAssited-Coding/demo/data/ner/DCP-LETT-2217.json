@@ -1,0 +1,64 @@
+{
+ "paragraphs": [
+  {
+   "segments": [
+    {
+     "text": "On going to ",
+     "label": null
+    },
+    {
+     "text": "London",
+     "label": "place"
+    },
+    {
+     "text": " ",
+     "label": null
+    },
+    {
+     "text": "last week",
+     "label": "date"
+    },
+    {
+     "text": " I found there lying for me the two first Parts of your great work, ",
+     "label": null
+    },
+    {
+     "text": "the Contributions &c &c.",
+     "label": "org"
+    },
+    {
+     "text": "— I thank you most truly for this magnificent present; & feel much flattered & gratified by this mark of your esteem.— I have eagerly turned over ",
+     "label": null
+    },
+    {
+     "text": "the pages &",
+     "label": "org"
+    },
+    {
+     "text": " plainly see that there will be much of the highest interest to me.—",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "With my cordial thanks for your kindness | I beg leave to remain | My dear Sir | Yours sincerely obliged | ",
+     "label": null
+    },
+    {
+     "text": "Ch",
+     "label": "person"
+    },
+    {
+     "text": ". ",
+     "label": null
+    },
+    {
+     "text": "Darwin",
+     "label": "person"
+    }
+   ]
+  }
+ ]
+}

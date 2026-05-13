@@ -1,0 +1,84 @@
+{
+ "paragraphs": [
+  {
+   "segments": [
+    {
+     "text": "Last night",
+     "label": "date"
+    },
+    {
+     "text": " I sent off per carrier to be forwarded per Deliverance Coy the 3 vols of ",
+     "label": null
+    },
+    {
+     "text": "D.C. & Brown’s Prod",
+     "label": "org"
+    },
+    {
+     "text": ".— You will get them on ",
+     "label": null
+    },
+    {
+     "text": "Thursday",
+     "label": "date"
+    },
+    {
+     "text": " ",
+     "label": null
+    },
+    {
+     "text": "night",
+     "label": "date"
+    },
+    {
+     "text": " or ",
+     "label": null
+    },
+    {
+     "text": "Friday",
+     "label": "date"
+    },
+    {
+     "text": " ",
+     "label": null
+    },
+    {
+     "text": "morning",
+     "label": "date"
+    },
+    {
+     "text": "; & very many thanks for loan.",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "I will write in ",
+     "label": null
+    },
+    {
+     "text": "a few days",
+     "label": "date"
+    },
+    {
+     "text": " time about results when I have calculated them",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "Ever yours | ",
+     "label": null
+    },
+    {
+     "text": "C. Darwin",
+     "label": "person"
+    }
+   ]
+  }
+ ]
+}

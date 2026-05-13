@@ -1,0 +1,84 @@
+{
+ "paragraphs": [
+  {
+   "segments": [
+    {
+     "text": "I write merely to say that I send up to ",
+     "label": null
+    },
+    {
+     "text": "London",
+     "label": "place"
+    },
+    {
+     "text": " ",
+     "label": null
+    },
+    {
+     "text": "this evening",
+     "label": "date"
+    },
+    {
+     "text": " ",
+     "label": null
+    },
+    {
+     "text": "D.",
+     "label": "person"
+    },
+    {
+     "text": " C. I suppose you will not get them till ",
+     "label": null
+    },
+    {
+     "text": "Saturday",
+     "label": "date"
+    },
+    {
+     "text": ". Very many thanks for the loan.— The Sections of all biggest genera in each order in the 3 vols. (which include all the least favourable orders) behave as I wish them, but not very strongly.—",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "Babington",
+     "label": "place"
+    },
+    {
+     "text": " with hesitation gives same verdict as you but confines his verdict to very small genera.— He really writes a very sensible letter on subject. He never thought of case before, but seems now to have thought deliberately & consulted some ",
+     "label": null
+    },
+    {
+     "text": "Botanical",
+     "label": "org"
+    },
+    {
+     "text": " friend.—",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "Ten thousand curses!",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "Ever yours | ",
+     "label": null
+    },
+    {
+     "text": "C. Darwin",
+     "label": "person"
+    }
+   ]
+  }
+ ]
+}

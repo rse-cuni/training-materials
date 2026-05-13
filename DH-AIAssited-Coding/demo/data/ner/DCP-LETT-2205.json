@@ -1,0 +1,56 @@
+{
+ "paragraphs": [
+  {
+   "segments": [
+    {
+     "text": "I have just received from ",
+     "label": null
+    },
+    {
+     "text": "Honble Walter Elliot",
+     "label": "org"
+    },
+    {
+     "text": " a few fowls from ",
+     "label": null
+    },
+    {
+     "text": "Burma, & I",
+     "label": "org"
+    },
+    {
+     "text": " shd. like you to see them. Will you let me have a line to say where I shall send them. They are in small not heavy ",
+     "label": null
+    },
+    {
+     "text": "Box",
+     "label": "person"
+    },
+    {
+     "text": " about 2 ft by 1 & 1 deep.—",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "In ",
+     "label": null
+    },
+    {
+     "text": "Haste",
+     "label": "place"
+    },
+    {
+     "text": " Yours very sincerely | ",
+     "label": null
+    },
+    {
+     "text": "C. Darwin",
+     "label": "person"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Darwin Correspondence — NER Viewer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="frame">
+
+  <aside id="sidebar">
+    <div class="spine">
+      <h1>Letters</h1>
+      <input id="filter" type="search" placeholder="filter…" autocomplete="off">
+      <ul id="letter-list"></ul>
+      <div class="ornament">❦</div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="parchment">
+      <header id="meta">
+        <h2 id="title">Select a letter</h2>
+        <div id="correspondence"></div>
+      </header>
+      <article id="transcription">
+        <p class="placeholder">Choose a letter from the shelf.</p>
+      </article>
+      <section id="entity-summary"></section>
+
+      <section id="custom-panel">
+        <div class="custom-header">
+          <h3>Custom entities</h3>
+          <button id="add-category" type="button" class="ghost">+ Add category</button>
+        </div>
+        <p class="custom-hint">Define your own categories (e.g. <em>Animal</em>, <em>Ship</em>) and the terms that belong to them. Matches are highlighted, counted, and exported.</p>
+        <div id="categories"></div>
+      </section>
+
+      <section id="instances">
+        <div class="instances-header">
+          <h3>Instances in context</h3>
+          <div class="export-buttons">
+            <button id="export-letter" type="button">⬇ Export this letter (CSV)</button>
+            <button id="export-all" type="button">⬇ Export all letters (CSV)</button>
+          </div>
+        </div>
+        <div id="instances-table"></div>
+      </section>
+    </div>
+  </main>
+
+  <aside id="legend-rail">
+    <div class="spine">
+      <h1>Entities</h1>
+      <ul class="legend-list">
+        <li><span class="dot person"></span>Person</li>
+        <li><span class="dot place"></span>Place</li>
+        <li><span class="dot date"></span>Date</li>
+        <li><span class="dot org"></span>Organisation</li>
+        <li><span class="dot bibl"></span>Reference</li>
+      </ul>
+      <label class="toggle"><input type="checkbox" id="show-tags" checked><span>show tags</span></label>
+      <div class="ornament">❦</div>
+    </div>
+  </aside>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>

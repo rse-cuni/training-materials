@@ -1,0 +1,72 @@
+{
+ "paragraphs": [
+  {
+   "segments": [
+    {
+     "text": "We were much concerned at hearing ",
+     "label": null
+    },
+    {
+     "text": "yesterday",
+     "label": "date"
+    },
+    {
+     "text": " ",
+     "label": null
+    },
+    {
+     "text": "evening",
+     "label": "date"
+    },
+    {
+     "text": " of the death of your mother. I never heard of a more merciful release from suffering. In your sorrow you must have the satisfaction of knowing how excellent & attentive a son you have been; & one cannot have a higher satisfaction. I hope ",
+     "label": null
+    },
+    {
+     "text": "Mrs Innes",
+     "label": "org"
+    },
+    {
+     "text": " has not suffered from the suddenness of the shock.",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "With our ",
+     "label": null
+    },
+    {
+     "text": "united sympathy",
+     "label": "place"
+    },
+    {
+     "text": ", pray believe me, ",
+     "label": null
+    },
+    {
+     "text": "Dear Innes",
+     "label": "org"
+    },
+    {
+     "text": " | Yours very sincerely | ",
+     "label": null
+    },
+    {
+     "text": "Ch",
+     "label": "person"
+    },
+    {
+     "text": ". ",
+     "label": null
+    },
+    {
+     "text": "Darwin",
+     "label": "person"
+    }
+   ]
+  }
+ ]
+}

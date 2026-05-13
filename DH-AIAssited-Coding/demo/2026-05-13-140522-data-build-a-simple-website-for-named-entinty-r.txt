@@ -1,0 +1,3019 @@
+╭─── Claude Code v2.1.140 ─────────────────────────────────────────────────────╮
+│                                                    │ Tips for getting        │
+│                 Welcome back Ludek!                │ started                 │
+│                                                    │ Run /init to create a … │
+│                       ▐▛███▜▌                      │ ─────────────────────── │
+│                      ▝▜█████▛▘                     │ What's new              │
+│                        ▘▘ ▝▝                       │ Improved Agent tool `s… │
+│      Opus 4.7 · Claude Pro ·                       │ Updated agent color pa… │
+│      ludek.svoboda.jr@gmail.com's Organization     │ Fixed `/goal` silently… │
+│                ~/Projects/DHDemoLive               │ /release-notes for more │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+❯ @data/ Build a simple website for named entinty recognition visualisation for 
+   these letter in xml format                                                   
+  ⎿  Listed directory data/
+
+  Read 1 file, listed 1 directory (ctrl+o to expand)
+
+● I'll build a static website that parses the TEI XML, extracts named entities
+  (persons, places, dates, orgs, bibliography refs) from the transcription, and
+  renders them with color-coded highlights. Since browsers can't list
+  directories, I'll also generate a manifest.
+
+● Bash(ls data/*.xml | xargs -n1 basename | sort | python3 -c "import sys, json;
+       print(json.dumps([l.strip() for l in sys.stdin]))" > letters.json && head
+       -c 200 lette…)
+  ⎿  ["DCP-LETT-2200.xml", "DCP-LETT-2201F.xml", "DCP-LETT-2201.xml", "DCP-
+     LETT-2202.xml", "DCP-LETT-2203.xml", "DCP-LETT-2204.xml", "DCP-LETT-22
+     05.xml", "DCP-LETT-2206.xml", "DCP-LETT-2207.xml", "DCP-LETT
+
+● Write(index.html)
+  ⎿  Wrote 32 lines to index.html
+       1 <!doctype html>
+       2 <html lang="en">
+       3 <head>
+       4 <meta charset="utf-8">
+       5 <title>Darwin Correspondence — NER Viewer</title>
+       6 <link rel="stylesheet" href="styles.css">
+       7 </head>
+       8 <body>
+       9 <aside id="sidebar">
+      10   <h1>Darwin Letters</h1>
+     … +24 lines (ctrl+o to expand)
+
+● Write(styles.css)
+  ⎿  Wrote 152 lines to styles.css
+       1 :root {
+       2   --bg: #faf7f1;
+       3   --ink: #1f1b16;
+       4   --muted: #6b6357;
+       5   --rule: #e6dfd2;
+       6   --accent: #5a3e2b;
+       7   --person: #ffd9a8;
+       8   --person-ink: #6b3a07;
+       9   --place: #b8e4c9;
+      10   --place-ink: #1f5733;
+     … +144 lines (ctrl+o to expand)
+
+● Write(app.js)
+  ⎿  Wrote 181 lines to app.js
+       2 const TEI = "http://www.tei-c.org/ns/1.0";
+       3 const ENTITY_MAP = {
+       4   persName: { cls: "person", tag: "PER" },
+       5   placeName: { cls: "place",  tag: "LOC" },
+       6   date:      { cls: "date",   tag: "DATE" },
+       8   // Bibliographic refs in the transcription are most commonly <
+         hi rend="italic">
+       9   // (work titles) or <ref target="../bibliographies/…"> — handl
+         ed below.
+      10 };
+     … +185 lines (ctrl+o to expand)
+
+● Bash(python3 -m json.tool letters.json | head -5 && echo "---" && grep -c
+      'persName\|placeName\|<date\|orgName' data/DCP-LETT-2200.xml)
+  ⎿  [
+         "DCP-LETT-2200.xml",
+         "DCP-LETT-2201F.xml",
+     … +4 lines (ctrl+o to expand)
+
+● Built. Files created in /home/ludek/Projects/DHDemoLive/:
+
+  - index.html — sidebar with filterable letter list + main reading pane
+  - styles.css — warm "manuscript" palette, color-coded entity highlights,
+  legend, toggleable tags
+  - app.js — fetches each XML, parses TEI namespace, walks the <div 
+  type="transcription"> and wraps persName, placeName, date, orgName, and
+  bibliography <ref target="../bibliographies/…"> in colored spans; renders
+  header metadata (sender/recipient/place/date) and an entity summary panel with
+   counts
+  - letters.json — manifest of all 36 XMLs (browsers can't list dirs)
+
+  The site reads the entities the TEI editors already encoded — no ML model —
+  which is the standard "NER visualisation" approach for TEI corpora.
+
+  Run it with any static server, e.g.:
+  cd /home/ludek/Projects/DHDemoLive && python3 -m http.server 8000
+  then open http://localhost:8000.
+
+✻ Baked for 1m 16s
+
+❯ There is nothing in browser on the localhost, what is going on, can you run   
+  it?                                                                           
+
+● Bash(python3 -m http.server 8000)
+  ⎿  Running in the background (↓ to manage)
+
+● Bash(sleep 1 && curl -s -o /dev/null -w "index: %{http_code}\n"
+      http://localhost:8000/ && curl -s -o /dev/null -w "letters.json:
+      %{http_code}\n" http://localhost:800…)
+  ⎿  index: 200
+     letters.json: 200
+     app.js: 200
+     xml: 200
+
+● Server is running now — all four resources return 200:
+
+  - http://localhost:8000/ → 200
+  - /letters.json → 200
+  - /app.js → 200
+  - /data/DCP-LETT-2200.xml → 200
+
+  Open http://localhost:8000 in your browser. The most likely reason it was
+  blank before: opening index.html directly via file:// (double-click) breaks
+  fetch() on local files due to CORS — it must be served over http.
+
+  If it's still blank at localhost:8000, open the browser devtools Console (F12)
+   and paste any error messages — that'll tell us exactly what's failing.
+
+  To stop the server later: kill %1 or find the process via the task ID
+  b14v204v1.
+
+✻ Sautéed for 16s
+
+❯ It is running, but there are no entities tagged in the text or they are not   
+  displayed                                                                     
+
+● Bash(for f in data/DCP-LETT-2200.xml data/DCP-LETT-2210.xml
+      data/DCP-LETT-2220.xml; do echo "=== $f ==="; python3 -c "
+      import re, sys…)
+  ⎿  === data/DCP-LETT-2200.xml ===
+       persName: 0
+       placeName: 0
+     … +18 lines (ctrl+o to expand)
+
+● Found it. The TEI corpus only tags entities in the header metadata and 
+  footnotes — the body transcription has no persName/placeName/date markup at
+  all. My code was correctly finding zero entities because there are zero to
+  find.
+
+  Two options:
+
+  A. Gazetteer NER (fast, no deps) — collect persons/places/orgs mentioned in
+  each letter's metadata + footnotes (e.g. "Blyth", "Bengal", "Lucknow", "Robert
+   Clive"), then highlight matches in the body. Plus regex for dates/years.
+  Works offline, instant.
+
+  B. Real ML NER (transformers.js) — downloads a ~50 MB model into the browser
+  the first time, runs a proper NER transformer. Slower first load but catches
+  "Xenophon", "Alexander" etc. that aren't in the metadata.
+
+● User answered Claude's questions:
+  ⎿  · How should the website actually detect entities in the letter body? → 
+     Gazetteer + regex (Recommended)
+
+● Write(app.js)
+  ⎿  Added 157 lines, removed 55 lines
+       1  const TEI = "http://www.tei-c.org/ns/1.0";
+       2 -                                                               
+       3 -const ENTITY_MAP = {                                           
+       4 -  persName: { cls: "person", tag: "PER" },                     
+       5 -  placeName: { cls: "place",  tag: "LOC" },                    
+       6 -  date:      { cls: "date",   tag: "DATE" },                   
+       7 -  orgName:   { cls: "org",    tag: "ORG" },                    
+       8 -  // Bibliographic refs in the transcription are most commonly 
+         -<hi rend="italic">                                             
+       9 -  // (work titles) or <ref target="../bibliographies/…"> — hand
+         -led below.                                                     
+      10 -};                                                             
+      11 -                                                               
+       2  const state = { letters: [], current: null };
+       3  
+       4 +const MONTHS = "January|February|March|April|May|June|July|Augu
+         +st|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|
+         +Aug|Sep|Sept|Oct|Nov|Dec";                                     
+       5 +const DATE_RES = [                                             
+       6 +  // 8 January 1858 / 22 Nov 1857                              
+       7 +  new RegExp(`\\b\\d{1,2}(?:st|nd|rd|th)?\\s+(?:${MONTHS})\\.?(
+         +?:\\s+\\d{4})?\\b`, "g"),                                      
+       8 +  // January 1858 / Jan. 1858                                  
+       9 +  new RegExp(`\\b(?:${MONTHS})\\.?\\s+\\d{4}\\b`, "g"),        
+      10 +  // bare 4-digit years 1700–1899                              
+      11 +  /\b1[78]\d{2}\b/g,                                           
+      12 +];                                                             
+      13 +                                                               
+      14  async function init() {
+      15 -  const resp = await fetch("letters.json");                    
+      16 -  state.letters = await resp.json();                           
+      15 +  state.letters = await fetch("letters.json").then(r => r.json(
+         +));                                                            
+      16    renderList();
+      18 -  document.getElementById("filter").addEventListener("input", (
+         -e) => {                                                        
+      19 -    renderList(e.target.value.toLowerCase());                  
+      20 -  });                                                          
+      21 -  document.getElementById("show-tags").addEventListener("change
+         -", (e) => {                                                    
+      22 -    document.body.classList.toggle("show-tags", e.target.checke
+         -d);                                                            
+      23 -  });                                                          
+      17 +  document.getElementById("filter").addEventListener("input", e
+         + =>                                                            
+      18 +    renderList(e.target.value.toLowerCase())                   
+      19 +  );                                                           
+      20 +  document.getElementById("show-tags").addEventListener("change
+         +", e =>                                                        
+      21 +    document.body.classList.toggle("show-tags", e.target.checke
+         +d)                                                             
+      22 +  );                                                           
+      23    document.body.classList.add("show-tags");
+      24    if (state.letters.length) loadLetter(state.letters[0]);
+      25  }
+     ...
+      40  async function loadLetter(name) {
+      41    state.current = name;
+      42    renderList(document.getElementById("filter").value.toLowerCas
+          e());
+      44 -  const xmlText = await fetch("data/" + name).then((r) => r.tex
+         -t());                                                          
+      43 +  const xmlText = await fetch("data/" + name).then(r => r.text(
+         +));                                                            
+      44    const doc = new DOMParser().parseFromString(xmlText, "applica
+          tion/xml");
+      45  
+      46    // Header metadata
+      48 -  const title = doc.querySelector("titleStmt > title")?.textCon
+         -tent.trim() ?? name;                                           
+      49 -  document.getElementById("title").textContent = title;        
+      47 +  document.getElementById("title").textContent =               
+      48 +    doc.querySelector("titleStmt > title")?.textContent.trim() 
+         +?? name;                                                       
+      49  
+      50    const corr = doc.getElementsByTagNameNS(TEI, "correspAction")
+          ;
+      51    const meta = document.getElementById("correspondence");
+     ...
+      61      meta.appendChild(span);
+      62    }
+      63  
+      65 -  // Transcription                                             
+      64 +  // Build gazetteer from header metadata + footnotes + keyword
+         +s                                                              
+      65 +  const gaz = buildGazetteer(doc);                             
+      66 +                                                               
+      67 +  // Find transcription div                                    
+      68    const transcription = [...doc.getElementsByTagNameNS(TEI, "di
+          v")]
+      67 -    .find((d) => d.getAttribute("type") === "transcription");  
+      69 +    .find(d => d.getAttribute("type") === "transcription");    
+      70  
+      71    const target = document.getElementById("transcription");
+      72    target.innerHTML = "";
+     ...
+       80  
+       81    for (const p of transcription.getElementsByTagNameNS(TEI, "p
+           ")) {
+       82      const out = document.createElement("p");
+       81 -    renderNode(p, out, counts);                               
+       83 +    renderNode(p, out, counts, gaz);                          
+       84      target.appendChild(out);
+       85    }
+       84 -                                                              
+       86    renderSummary(counts);
+       87  }
+       88  
+       88 -function renderNode(src, dst, counts) {                       
+       89 +function buildGazetteer(doc) {                                
+       90 +  const persons = new Set();                                  
+       91 +  const places = new Set();                                   
+       92 +  const orgs = new Set();                                     
+       93 +                                                              
+       94 +  const addName = (raw, set) => {                             
+       95 +    const t = (raw || "").trim();                             
+       96 +    if (!t) return;                                           
+       97 +    set.add(t);                                               
+       98 +    // "Lastname, Firstname" → also add "Lastname"            
+       99 +    const m = t.match(/^([A-Z][\p{L}'’\-]+),\s*/u);           
+      100 +    if (m) set.add(m[1]);                                     
+      101 +    // Multi-word: also add last word if capitalised (e.g. "Ro
+          +bert Clive" → "Clive")                                        
+      102 +    const parts = t.split(/\s+/);                             
+      103 +    if (parts.length > 1) {                                   
+      104 +      const last = parts[parts.length - 1].replace(/[.,;:]$/, 
+          +"");                                                          
+      105 +      if (/^[A-Z][\p{L}'’\-]+$/u.test(last)) set.add(last);   
+      106 +    }                                                         
+      107 +  };                                                          
+      108 +                                                              
+      109 +  for (const p of doc.getElementsByTagNameNS(TEI, "persName"))
+          + addName(p.textContent, persons);                             
+      110 +  for (const p of doc.getElementsByTagNameNS(TEI, "placeName")
+          +) addName(p.textContent, places);                             
+      111 +  for (const p of doc.getElementsByTagNameNS(TEI, "orgName")) 
+          +addName(p.textContent, orgs);                                 
+      112 +                                                              
+      113 +  // Keywords block — categorised hints                       
+      114 +  for (const t of doc.getElementsByTagNameNS(TEI, "term")) {  
+      115 +    const type = t.getAttribute("type") || "";                
+      116 +    const text = t.textContent.trim();                        
+      117 +    if (!text) continue;                                      
+      118 +    if (type === "places") addName(text.split(",")[0], places)
+          +;                                                             
+      119 +    if (type === "people") addName(text, persons);            
+      120 +    if (type === "societies" || type === "institutions") addNa
+          +me(text, orgs);                                               
+      121 +  }                                                           
+      122 +                                                              
+      123 +  // Footnotes often contain <ref target="../nameregs/…">Full 
+          +Name</ref>                                                    
+      124 +  for (const r of doc.getElementsByTagNameNS(TEI, "ref")) {   
+      125 +    const tgt = r.getAttribute("target") || "";               
+      126 +    const text = r.textContent.trim();                        
+      127 +    if (!text) continue;                                      
+      128 +    if (tgt.includes("nameregs/")) {                          
+      129 +      // could be person OR org — guess from text: "Society", 
+          +"Company", "Museum" → org                                     
+      130 +      if (/\b(Society|Company|Museum|University|College|Club|G
+          +arden|Association|Institute|Office|Department|Navy|Army)\b/.te
+          +st(text)) {                                                   
+      131 +        addName(text, orgs);                                  
+      132 +      } else {                                                
+      133 +        addName(text, persons);                               
+      134 +      }                                                       
+      135 +    }                                                         
+      136 +  }                                                           
+      137 +                                                              
+      138 +  // Build a single regex with alternation, longest-first to p
+          +refer full names                                              
+      139 +  const all = [];                                             
+      140 +  for (const v of persons) all.push({ text: v, cls: "person", 
+          +tag: "PER" });                                                
+      141 +  for (const v of places)  all.push({ text: v, cls: "place",  
+          +tag: "LOC" });                                                
+      142 +  for (const v of orgs)    all.push({ text: v, cls: "org",    
+          +tag: "ORG" });                                                
+      143 +                                                              
+      144 +  // de-dupe by text, keeping first                           
+      145 +  const seen = new Map();                                     
+      146 +  for (const it of all) if (!seen.has(it.text)) seen.set(it.te
+          +xt, it);                                                      
+      147 +  const items = [...seen.values()].sort((a, b) => b.text.lengt
+          +h - a.text.length);                                           
+      148 +                                                              
+      149 +  if (!items.length) return null;                             
+      150 +  const escaped = items.map(it => it.text.replace(/[.*+?^${}()
+          +|[\]\\]/g, "\\$&"));                                          
+      151 +  const re = new RegExp(`\\b(?:${escaped.join("|")})\\b`, "g")
+          +;                                                             
+      152 +  return { re, items, byText: new Map(items.map(it => [it.text
+          +, it])) };                                                    
+      153 +}                                                             
+      154 +                                                              
+      155 +function renderNode(src, dst, counts, gaz) {                  
+      156    for (const node of src.childNodes) {
+      157      if (node.nodeType === Node.TEXT_NODE) {
+       91 -      dst.appendChild(document.createTextNode(node.nodeValue))
+          -;                                                             
+      158 +      annotateText(node.nodeValue, dst, counts, gaz);         
+      159        continue;
+      160      }
+      161      if (node.nodeType !== Node.ELEMENT_NODE) continue;
+      162  
+      163      const local = node.localName;
+       97 -                                                              
+       98 -    // Skip pure markup anchors / structural notes            
+      164      if (local === "anchor" || local === "lb") continue;
+      165  
+      101 -    const ent = ENTITY_MAP[local];                            
+      102 -    if (ent) {                                                
+      103 -      const span = document.createElement("span");            
+      104 -      span.className = "ent " + ent.cls;                      
+      105 -      span.dataset.tag = ent.tag;                             
+      106 -      renderNode(node, span, counts);                         
+      107 -      const text = span.textContent.trim();                   
+      108 -      if (text) counts[ent.cls].push(text);                   
+      109 -      dst.appendChild(span);                                  
+      110 -      continue;                                               
+      111 -    }                                                         
+      112 -                                                              
+      113 -    // Bibliographic ref: a <ref> pointing to ../bibliographie
+          -s/                                                            
+      166 +    // Bibliographic ref → highlight as BIBL                  
+      167      if (local === "ref") {
+      168        const tgt = node.getAttribute("target") || "";
+      169        if (tgt.includes("bibliographies/")) {
+      170          const span = document.createElement("span");
+      171          span.className = "ent bibl";
+      172          span.dataset.tag = "BIBL";
+      120 -        renderNode(node, span, counts);                       
+      173 +        renderNode(node, span, counts, gaz);                  
+      174          const text = span.textContent.trim();
+      175          if (text) counts.bibl.push(text);
+      176          dst.appendChild(span);
+      177        }
+      125 -      // footnote refs and others: skip (they have no text)   
+      178        continue;
+      179      }
+      180  
+      129 -    // <hi rend="italic"> often used for work titles within th
+          -e transcription.                                              
+      181      if (local === "hi") {
+      182        const rend = node.getAttribute("rend") || "";
+      183        const wrapper = document.createElement(
+     ...
+      186          rend.includes("superscript") ? "sup" :
+      187          rend.includes("subscript") ? "sub" : "span"
+      188        );
+      138 -      renderNode(node, wrapper, counts);                      
+      189 +      renderNode(node, wrapper, counts, gaz);                 
+      190        dst.appendChild(wrapper);
+      191        continue;
+      192      }
+      193  
+      143 -    // Fallback: descend transparently                        
+      144 -    renderNode(node, dst, counts);                            
+      194 +    // Inline TEI entity tags (rare in these letters, but hono
+          +ur them if present)                                           
+      195 +    const direct = { persName: ["person","PER"], placeName: ["
+          +place","LOC"], date: ["date","DATE"], orgName: ["org","ORG"] }
+          +[local];                                                      
+      196 +    if (direct) {                                             
+      197 +      const span = document.createElement("span");            
+      198 +      span.className = "ent " + direct[0];                    
+      199 +      span.dataset.tag = direct[1];                           
+      200 +      renderNode(node, span, counts, gaz);                    
+      201 +      const text = span.textContent.trim();                   
+      202 +      if (text) counts[direct[0]].push(text);                 
+      203 +      dst.appendChild(span);                                  
+      204 +      continue;                                               
+      205 +    }                                                         
+      206 +                                                              
+      207 +    renderNode(node, dst, counts, gaz);                       
+      208    }
+      209  }
+      210  
+      211 +function annotateText(text, dst, counts, gaz) {               
+      212 +  // First, collect all match spans (gazetteer + date regexes)
+          +, resolve overlaps by                                         
+      213 +  // preferring longer matches and earlier starts.            
+      214 +  const spans = [];                                           
+      215 +  if (gaz) {                                                  
+      216 +    gaz.re.lastIndex = 0;                                     
+      217 +    let m;                                                    
+      218 +    while ((m = gaz.re.exec(text))) {                         
+      219 +      const it = gaz.byText.get(m[0]) ||                      
+      220 +        [...gaz.items].find(i => i.text === m[0]);            
+      221 +      if (it) spans.push({ start: m.index, end: m.index + m[0]
+          +.length, cls: it.cls, tag: it.tag });                         
+      222 +    }                                                         
+      223 +  }                                                           
+      224 +  for (const re of DATE_RES) {                                
+      225 +    re.lastIndex = 0;                                         
+      226 +    let m;                                                    
+      227 +    while ((m = re.exec(text))) {                             
+      228 +      spans.push({ start: m.index, end: m.index + m[0].length,
+          + cls: "date", tag: "DATE" });                                 
+      229 +    }                                                         
+      230 +  }                                                           
+      231 +                                                              
+      232 +  spans.sort((a, b) => a.start - b.start || (b.end - b.start) 
+          +- (a.end - a.start));                                         
+      233 +  const kept = [];                                            
+      234 +  let cursor = 0;                                             
+      235 +  for (const s of spans) {                                    
+      236 +    if (s.start < cursor) continue;                           
+      237 +    kept.push(s);                                             
+      238 +    cursor = s.end;                                           
+      239 +  }                                                           
+      240 +                                                              
+      241 +  let pos = 0;                                                
+      242 +  for (const s of kept) {                                     
+      243 +    if (s.start > pos) dst.appendChild(document.createTextNode
+          +(text.slice(pos, s.start)));                                  
+      244 +    const span = document.createElement("span");              
+      245 +    span.className = "ent " + s.cls;                          
+      246 +    span.dataset.tag = s.tag;                                 
+      247 +    const txt = text.slice(s.start, s.end);                   
+      248 +    span.textContent = txt;                                   
+      249 +    counts[s.cls].push(txt);                                  
+      250 +    dst.appendChild(span);                                    
+      251 +    pos = s.end;                                              
+      252 +  }                                                           
+      253 +  if (pos < text.length) dst.appendChild(document.createTextNo
+          +de(text.slice(pos)));                                         
+      254 +}                                                             
+      255 +                                                              
+      256  function renderSummary(counts) {
+      257    const root = document.getElementById("entity-summary");
+      258    root.innerHTML = "";
+      151 -  const titles = {                                            
+      152 -    person: "Persons",                                        
+      153 -    place:  "Places",                                         
+      154 -    date:   "Dates",                                          
+      155 -    org:    "Organisations",                                  
+      156 -    bibl:   "Bibliography",                                   
+      157 -  };                                                          
+      259 +  const titles = { person: "Persons", place: "Places", date: "
+          +Dates", org: "Organisations", bibl: "Bibliography" };         
+      260    for (const key of Object.keys(titles)) {
+      261      const items = counts[key];
+      262      if (!items.length) continue;
+● Reload the page (the server is still running) — entities should now light up
+  in the body text.
+
+  The new logic builds a per-letter gazetteer from each XML's header
+  persName/placeName/orgName, keyword terms, and footnote <ref 
+  target="../nameregs/..."> names (so e.g. "Robert Clive" from a footnote
+  highlights "Clive" in the body). It also splits "Lastname, Firstname" entries
+  to catch bare surnames, classifies nameregs refs as ORG when they contain
+  words like Society/Company/Museum, and uses regex for dates and
+  18th/19th-century years. Bibliographic <ref>s remain highlighted as BIBL.
+
+✻ Worked for 1m 9s
+
+❯ The results are iffy, are there any better techniques for ner that we could   
+  use?                                                                          
+
+● Good question. The gazetteer is limited because it can only highlight names
+  that the editors already mentioned in metadata — it misses "Xenophon",
+  "Alexander", "Ld Clive", "Sir W. Wiseman" when not foot-noted, and
+  over-matches common surnames. Better options, roughly worst→best for this
+  corpus:
+
+  1. In-browser transformer NER (transformers.js + a model like 
+  Xenova/bert-base-NER) — proper ML, runs offline after a ~50 MB download. But
+  these models are trained on modern news text and stumble on 19thC prose:
+  archaic titles ("Ld", "Dr"), continental names, ship names, species names.
+  2. GLiNER zero-shot NER in browser — small model (~150 MB), lets you define
+  entity types ("historical figure", "ship", "species", "publication"). Better
+  fit for a TEI corpus, still browser-only.
+  3. Pre-process once with the Claude API, cache to JSON (recommended) — run
+  each XML through Claude with a prompt that knows the domain ("19thC scientific
+   correspondence; tag persons including titled forms like 'Ld Clive', places,
+  dates, organisations, ships, species, publications"), save results to
+  data/ner/DCP-LETT-XXXX.json, then the browser just loads the cached
+  annotations. Highest quality, fast in browser, costs cents total for 36
+  letters, fully deterministic after caching.
+  4. Server-side spaCy with a historical-text model — needs a Python backend
+  running, more moving parts.
+
+● User answered Claude's questions:
+  ⎿  · Which approach should I implement? → Lets use spacy
+
+● spaCy it is. Best path: a Python script pre-processes all 36 XMLs once and
+  writes per-letter JSON, then the browser loads the cached annotations. Let me
+  check what's installed.
+
+● Bash(python3 -c "import spacy; print(spacy.__version__)" 2>&1; python3 -c
+      "import spacy; nlp=spacy.load('en_core_web_sm'); print('sm OK')" 2>&1;
+      python3 -c "import s…)
+  ⎿  3.8.14
+     sm OK
+     Traceback (most recent call last):
+     … +2 lines (ctrl+o to expand)
+
+● spaCy 3.8 + en_core_web_sm ready. I'll use that (trf would be more accurate
+  but needs a download — easy upgrade later). Building the preprocessor now.
+
+● Write(ner_preprocess.py)
+  ⎿  Wrote 174 lines to ner_preprocess.py
+         ON annotations.TEI letters with spaCy NER and emit per-letter JS
+       2 
+         aphs as plainxml, extracts the <div type="transcription"> paragr
+       4 text (preserving character offsets back to the source XML so tha
+         t <ref> markup
+       6 data/ner/<id>.json with this shape: spaCy NER, then writes
+       7 
+       9       "paragraphs": [
+      10         {"segments": [{"text": "...", "label": "PER" | null}, ..
+         .]}
+     … +179 lines (ctrl+o to expand)
+
+● Bash(python3 ner_preprocess.py 2>&1 | tail -20)
+  ⎿    DCP-LETT-2216.xml → DCP-LETT-2216.json  (25 entities)
+       DCP-LETT-2217.xml → DCP-LETT-2217.json  (6 entities)
+       DCP-LETT-2218.xml → DCP-LETT-2218.json  (12 entities)
+     … +13 lines (ctrl+o to expand)
+
+● Bash(python3 -c "
+      import json…)
+  ⎿  p0: [('Ld Clive', 'org'), ('Jack', 'person'), ('this Zebrified Jackass
+     ', 'person'), ('Jenny Asses', 'person'), ('Swine', 'place')]
+     p1: [('yesterday', 'date'), ('the Bay of Bengal', 'place'), ('Bengal',
+     … +6 lines (ctrl+o to expand)
+
+● Annotations cached. Now wire the frontend to use them.
+
+● Write(app.js)
+  ⎿  Added 22 lines, removed 187 lines
+       1  const TEI = "http://www.tei-c.org/ns/1.0";
+       2 +const TAG_FOR = { person: "PER", place: "LOC", date: "DATE", or
+         +g: "ORG", bibl: "BIBL" };                                      
+       3  const state = { letters: [], current: null };
+       4  
+       4 -const MONTHS = "January|February|March|April|May|June|July|Augu
+         -st|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|
+         -Aug|Sep|Sept|Oct|Nov|Dec";                                     
+       5 -const DATE_RES = [                                             
+       6 -  // 8 January 1858 / 22 Nov 1857                              
+       7 -  new RegExp(`\\b\\d{1,2}(?:st|nd|rd|th)?\\s+(?:${MONTHS})\\.?(
+         -?:\\s+\\d{4})?\\b`, "g"),                                      
+       8 -  // January 1858 / Jan. 1858                                  
+       9 -  new RegExp(`\\b(?:${MONTHS})\\.?\\s+\\d{4}\\b`, "g"),        
+      10 -  // bare 4-digit years 1700–1899                              
+      11 -  /\b1[78]\d{2}\b/g,                                           
+      12 -];                                                             
+      13 -                                                               
+       5  async function init() {
+       6    state.letters = await fetch("letters.json").then(r => r.json(
+          ));
+       7    renderList();
+     ...
+      31  async function loadLetter(name) {
+      32    state.current = name;
+      33    renderList(document.getElementById("filter").value.toLowerCas
+          e());
+      43 -  const xmlText = await fetch("data/" + name).then(r => r.text(
+         -));                                                            
+      34 +                                                               
+      35 +  const stem = name.replace(/\.xml$/, "");                     
+      36 +  const [xmlText, nerData] = await Promise.all([               
+      37 +    fetch("data/" + name).then(r => r.text()),                 
+      38 +    fetch(`data/ner/${stem}.json`).then(r => r.ok ? r.json() : 
+         +{ paragraphs: [] }),                                           
+      39 +  ]);                                                          
+      40    const doc = new DOMParser().parseFromString(xmlText, "applica
+          tion/xml");
+      41  
+      42    // Header metadata
+     ...
+       57      meta.appendChild(span);
+       58    }
+       59  
+       64 -  // Build gazetteer from header metadata + footnotes + keywor
+          -ds                                                            
+       65 -  const gaz = buildGazetteer(doc);                            
+       66 -                                                              
+       67 -  // Find transcription div                                   
+       68 -  const transcription = [...doc.getElementsByTagNameNS(TEI, "d
+          -iv")]                                                         
+       69 -    .find(d => d.getAttribute("type") === "transcription");   
+       70 -                                                              
+       60    const target = document.getElementById("transcription");
+       61    target.innerHTML = "";
+       62    const counts = { person: [], place: [], date: [], org: [], b
+           ibl: [] };
+       63  
+       75 -  if (!transcription) {                                       
+       76 -    target.textContent = "(no transcription found)";          
+       64 +  if (!nerData.paragraphs?.length) {                          
+       65 +    target.textContent = "(no annotations available — run ner_
+          +preprocess.py)";                                              
+       66      renderSummary(counts);
+       67      return;
+       68    }
+       69  
+       81 -  for (const p of transcription.getElementsByTagNameNS(TEI, "p
+          -")) {                                                         
+       82 -    const out = document.createElement("p");                  
+       83 -    renderNode(p, out, counts, gaz);                          
+       84 -    target.appendChild(out);                                  
+       85 -  }                                                           
+       86 -  renderSummary(counts);                                      
+       87 -}                                                             
+       88 -                                                              
+       89 -function buildGazetteer(doc) {                                
+       90 -  const persons = new Set();                                  
+       91 -  const places = new Set();                                   
+       92 -  const orgs = new Set();                                     
+       93 -                                                              
+       94 -  const addName = (raw, set) => {                             
+       95 -    const t = (raw || "").trim();                             
+       96 -    if (!t) return;                                           
+       97 -    set.add(t);                                               
+       98 -    // "Lastname, Firstname" → also add "Lastname"            
+       99 -    const m = t.match(/^([A-Z][\p{L}'’\-]+),\s*/u);           
+      100 -    if (m) set.add(m[1]);                                     
+      101 -    // Multi-word: also add last word if capitalised (e.g. "Ro
+          -bert Clive" → "Clive")                                        
+      102 -    const parts = t.split(/\s+/);                             
+      103 -    if (parts.length > 1) {                                   
+      104 -      const last = parts[parts.length - 1].replace(/[.,;:]$/, 
+          -"");                                                          
+      105 -      if (/^[A-Z][\p{L}'’\-]+$/u.test(last)) set.add(last);   
+      106 -    }                                                         
+      107 -  };                                                          
+      108 -                                                              
+      109 -  for (const p of doc.getElementsByTagNameNS(TEI, "persName"))
+          - addName(p.textContent, persons);                             
+      110 -  for (const p of doc.getElementsByTagNameNS(TEI, "placeName")
+          -) addName(p.textContent, places);                             
+      111 -  for (const p of doc.getElementsByTagNameNS(TEI, "orgName")) 
+          -addName(p.textContent, orgs);                                 
+      112 -                                                              
+      113 -  // Keywords block — categorised hints                       
+      114 -  for (const t of doc.getElementsByTagNameNS(TEI, "term")) {  
+      115 -    const type = t.getAttribute("type") || "";                
+      116 -    const text = t.textContent.trim();                        
+      117 -    if (!text) continue;                                      
+      118 -    if (type === "places") addName(text.split(",")[0], places)
+          -;                                                             
+      119 -    if (type === "people") addName(text, persons);            
+      120 -    if (type === "societies" || type === "institutions") addNa
+          -me(text, orgs);                                               
+      121 -  }                                                           
+      122 -                                                              
+      123 -  // Footnotes often contain <ref target="../nameregs/…">Full 
+          -Name</ref>                                                    
+      124 -  for (const r of doc.getElementsByTagNameNS(TEI, "ref")) {   
+      125 -    const tgt = r.getAttribute("target") || "";               
+      126 -    const text = r.textContent.trim();                        
+      127 -    if (!text) continue;                                      
+      128 -    if (tgt.includes("nameregs/")) {                          
+      129 -      // could be person OR org — guess from text: "Society", 
+          -"Company", "Museum" → org                                     
+      130 -      if (/\b(Society|Company|Museum|University|College|Club|G
+          -arden|Association|Institute|Office|Department|Navy|Army)\b/.te
+          -st(text)) {                                                   
+      131 -        addName(text, orgs);                                  
+       70 +  for (const para of nerData.paragraphs) {                    
+       71 +    const p = document.createElement("p");                    
+       72 +    for (const seg of para.segments) {                        
+       73 +      if (!seg.label) {                                       
+       74 +        p.appendChild(document.createTextNode(seg.text));     
+       75        } else {
+      133 -        addName(text, persons);                               
+      134 -      }                                                       
+      135 -    }                                                         
+      136 -  }                                                           
+      137 -                                                              
+      138 -  // Build a single regex with alternation, longest-first to p
+          -refer full names                                              
+      139 -  const all = [];                                             
+      140 -  for (const v of persons) all.push({ text: v, cls: "person", 
+          -tag: "PER" });                                                
+      141 -  for (const v of places)  all.push({ text: v, cls: "place",  
+          -tag: "LOC" });                                                
+      142 -  for (const v of orgs)    all.push({ text: v, cls: "org",    
+          -tag: "ORG" });                                                
+      143 -                                                              
+      144 -  // de-dupe by text, keeping first                           
+      145 -  const seen = new Map();                                     
+      146 -  for (const it of all) if (!seen.has(it.text)) seen.set(it.te
+          -xt, it);                                                      
+      147 -  const items = [...seen.values()].sort((a, b) => b.text.lengt
+          -h - a.text.length);                                           
+      148 -                                                              
+      149 -  if (!items.length) return null;                             
+      150 -  const escaped = items.map(it => it.text.replace(/[.*+?^${}()
+          -|[\]\\]/g, "\\$&"));                                          
+      151 -  const re = new RegExp(`\\b(?:${escaped.join("|")})\\b`, "g")
+          -;                                                             
+      152 -  return { re, items, byText: new Map(items.map(it => [it.text
+          -, it])) };                                                    
+      153 -}                                                             
+      154 -                                                              
+      155 -function renderNode(src, dst, counts, gaz) {                  
+      156 -  for (const node of src.childNodes) {                        
+      157 -    if (node.nodeType === Node.TEXT_NODE) {                   
+      158 -      annotateText(node.nodeValue, dst, counts, gaz);         
+      159 -      continue;                                               
+      160 -    }                                                         
+      161 -    if (node.nodeType !== Node.ELEMENT_NODE) continue;        
+      162 -                                                              
+      163 -    const local = node.localName;                             
+      164 -    if (local === "anchor" || local === "lb") continue;       
+      165 -                                                              
+      166 -    // Bibliographic ref → highlight as BIBL                  
+      167 -    if (local === "ref") {                                    
+      168 -      const tgt = node.getAttribute("target") || "";          
+      169 -      if (tgt.includes("bibliographies/")) {                  
+       76          const span = document.createElement("span");
+      171 -        span.className = "ent bibl";                          
+      172 -        span.dataset.tag = "BIBL";                            
+      173 -        renderNode(node, span, counts, gaz);                  
+      174 -        const text = span.textContent.trim();                 
+      175 -        if (text) counts.bibl.push(text);                     
+      176 -        dst.appendChild(span);                                
+       77 +        span.className = "ent " + seg.label;                  
+       78 +        span.dataset.tag = TAG_FOR[seg.label] || seg.label.toU
+          +pperCase();                                                   
+       79 +        span.textContent = seg.text;                          
+       80 +        p.appendChild(span);                                  
+       81 +        const trimmed = seg.text.trim();                      
+       82 +        if (trimmed && counts[seg.label]) counts[seg.label].pu
+          +sh(trimmed);                                                  
+       83        }
+      178 -      continue;                                               
+       84      }
+      180 -                                                              
+      181 -    if (local === "hi") {                                     
+      182 -      const rend = node.getAttribute("rend") || "";           
+      183 -      const wrapper = document.createElement(                 
+      184 -        rend.includes("italic") ? "em" :                      
+      185 -        rend.includes("underline") ? "u" :                    
+      186 -        rend.includes("superscript") ? "sup" :                
+      187 -        rend.includes("subscript") ? "sub" : "span"           
+      188 -      );                                                      
+      189 -      renderNode(node, wrapper, counts, gaz);                 
+      190 -      dst.appendChild(wrapper);                               
+      191 -      continue;                                               
+      192 -    }                                                         
+      193 -                                                              
+      194 -    // Inline TEI entity tags (rare in these letters, but hono
+          -ur them if present)                                           
+      195 -    const direct = { persName: ["person","PER"], placeName: ["
+          -place","LOC"], date: ["date","DATE"], orgName: ["org","ORG"] }
+          -[local];                                                      
+      196 -    if (direct) {                                             
+      197 -      const span = document.createElement("span");            
+      198 -      span.className = "ent " + direct[0];                    
+      199 -      span.dataset.tag = direct[1];                           
+      200 -      renderNode(node, span, counts, gaz);                    
+      201 -      const text = span.textContent.trim();                   
+      202 -      if (text) counts[direct[0]].push(text);                 
+      203 -      dst.appendChild(span);                                  
+      204 -      continue;                                               
+      205 -    }                                                         
+      206 -                                                              
+      207 -    renderNode(node, dst, counts, gaz);                       
+       85 +    target.appendChild(p);                                    
+       86    }
+      209 -}                                                             
+       87  
+      211 -function annotateText(text, dst, counts, gaz) {               
+      212 -  // First, collect all match spans (gazetteer + date regexes)
+          -, resolve overlaps by                                         
+      213 -  // preferring longer matches and earlier starts.            
+      214 -  const spans = [];                                           
+      215 -  if (gaz) {                                                  
+      216 -    gaz.re.lastIndex = 0;                                     
+      217 -    let m;                                                    
+      218 -    while ((m = gaz.re.exec(text))) {                         
+      219 -      const it = gaz.byText.get(m[0]) ||                      
+      220 -        [...gaz.items].find(i => i.text === m[0]);            
+      221 -      if (it) spans.push({ start: m.index, end: m.index + m[0]
+          -.length, cls: it.cls, tag: it.tag });                         
+      222 -    }                                                         
+      223 -  }                                                           
+      224 -  for (const re of DATE_RES) {                                
+      225 -    re.lastIndex = 0;                                         
+      226 -    let m;                                                    
+      227 -    while ((m = re.exec(text))) {                             
+      228 -      spans.push({ start: m.index, end: m.index + m[0].length,
+          - cls: "date", tag: "DATE" });                                 
+      229 -    }                                                         
+      230 -  }                                                           
+      231 -                                                              
+      232 -  spans.sort((a, b) => a.start - b.start || (b.end - b.start) 
+          -- (a.end - a.start));                                         
+      233 -  const kept = [];                                            
+      234 -  let cursor = 0;                                             
+      235 -  for (const s of spans) {                                    
+      236 -    if (s.start < cursor) continue;                           
+      237 -    kept.push(s);                                             
+      238 -    cursor = s.end;                                           
+      239 -  }                                                           
+      240 -                                                              
+      241 -  let pos = 0;                                                
+      242 -  for (const s of kept) {                                     
+      243 -    if (s.start > pos) dst.appendChild(document.createTextNode
+          -(text.slice(pos, s.start)));                                  
+      244 -    const span = document.createElement("span");              
+      245 -    span.className = "ent " + s.cls;                          
+      246 -    span.dataset.tag = s.tag;                                 
+      247 -    const txt = text.slice(s.start, s.end);                   
+      248 -    span.textContent = txt;                                   
+      249 -    counts[s.cls].push(txt);                                  
+      250 -    dst.appendChild(span);                                    
+      251 -    pos = s.end;                                              
+      252 -  }                                                           
+      253 -  if (pos < text.length) dst.appendChild(document.createTextNo
+          -de(text.slice(pos)));                                         
+       88 +  renderSummary(counts);                                      
+       89  }
+       90  
+       91  function renderSummary(counts) {
+
+● Reload the page. spaCy now drives the highlights — annotations are cached in
+  data/ner/*.json.
+
+  Sample from letter 2200: it catches Livingstone, Lucknow, Bengal, Bay of 
+  Bengal, Africa, India, W. Wiseman, Alexander — names the gazetteer couldn't
+  see. Quality is still imperfect (en_core_web_sm is small and trained on modern
+   news, so it mislabels "Jack"/"Jenny Asses" as persons and "British Birds" as
+  an org).
+
+  Two easy upgrades if quality is still iffy:
+
+  - Bigger model: python3 -m spacy download en_core_web_trf then change
+  en_core_web_sm → en_core_web_trf in ner_preprocess.py and re-run.
+  Transformer-based, much better but slower and a ~500 MB download.
+  - Custom rules / exclusions: spaCy's EntityRuler to suppress known false
+  positives (animal terms, common nouns) and add domain terms (Asiatic Society
+  of Bengal, East India Company, HMS Beagle, etc.).
+
+  Inline italic/superscript formatting was dropped in this pipeline — let me
+  know if you want it back; preserving it through a flat-text NER pass is doable
+   but adds complexity.
+
+✻ Worked for 1m 47s
+
+※ recap: Building a NER visualisation site for the Darwin TEI letters; spaCy en_core_web_sm now tags entities into cached JSON and the browser renders them at localhost:8000. Next: reload to check quality, or upgrade to en_core_web_trf if results are still iffy. (disable recaps in /config)
+
+❯ @Gemini_Generated_Image_zdszxazdszxazdsz.png I want the website to by styled  
+  according to this mockup                                                      
+  ⎿  ⧉ Selected 32 lines from index.html in Cursor
+
+  Read 1 file, listed 1 directory (ctrl+o to expand)
+
+● Restyling the site to match the mockup: dark leather sidebars, aged parchment
+  reading area, Playfair Display for headings, entity legend moved to a right
+  rail.
+
+● Write(index.html)
+  ⎿  Added 43 lines, removed 21 lines
+       3  <head>
+       4  <meta charset="utf-8">
+       5  <title>Darwin Correspondence — NER Viewer</title>
+       6 +<link rel="preconnect" href="https://fonts.googleapis.com">    
+       7 +<link rel="preconnect" href="https://fonts.gstatic.com" crossor
+         +igin>                                                          
+       8 +<link href="https://fonts.googleapis.com/css2?family=Playfair+D
+         +isplay:ital,wght@0,500;0,700;1,400&family=EB+Garamond:ital,wght
+         +@0,400;0,500;1,400&family=Cinzel:wght@500;700&display=swap" rel
+         +="stylesheet">                                                 
+       9  <link rel="stylesheet" href="styles.css">
+      10  </head>
+      11  <body>
+       9 -<aside id="sidebar">                                           
+      10 -  <h1>Darwin Letters</h1>                                      
+      11 -  <input id="filter" type="search" placeholder="Filter…" autoco
+         -mplete="off">                                                  
+      12 -  <ul id="letter-list"></ul>                                   
+      13 -</aside>                                                       
+      14 -<main>                                                         
+      15 -  <header id="meta">                                           
+      16 -    <h2 id="title">Select a letter</h2>                        
+      17 -    <div id="correspondence"></div>                            
+      18 -  </header>                                                    
+      19 -  <section id="legend">                                        
+      20 -    <span class="ent person">Person</span>                     
+      21 -    <span class="ent place">Place</span>                       
+      22 -    <span class="ent date">Date</span>                         
+      23 -    <span class="ent org">Organisation</span>                  
+      24 -    <span class="ent bibl">Bibliography</span>                 
+      25 -    <label class="toggle"><input type="checkbox" id="show-tags"
+         - checked> show entity tags</label>                             
+      26 -  </section>                                                   
+      27 -  <article id="transcription"></article>                       
+      28 -  <section id="entity-summary"></section>                      
+      29 -</main>                                                        
+      12 +<div class="frame">                                            
+      13 +                                                               
+      14 +  <aside id="sidebar">                                         
+      15 +    <div class="spine">                                        
+      16 +      <h1>Letters</h1>                                         
+      17 +      <input id="filter" type="search" placeholder="filter…" au
+         +tocomplete="off">                                              
+      18 +      <ul id="letter-list"></ul>                               
+      19 +      <div class="ornament">❦</div>                            
+      20 +    </div>                                                     
+      21 +  </aside>                                                     
+      22 +                                                               
+      23 +  <main>                                                       
+      24 +    <div class="parchment">                                    
+      25 +      <header id="meta">                                       
+      26 +        <h2 id="title">Select a letter</h2>                    
+      27 +        <div id="correspondence"></div>                        
+      28 +      </header>                                                
+      29 +      <article id="transcription">                             
+      30 +        <p class="placeholder">Choose a letter from the shelf.<
+         +/p>                                                            
+      31 +      </article>                                               
+      32 +      <section id="entity-summary"></section>                  
+      33 +    </div>                                                     
+      34 +  </main>                                                      
+      35 +                                                               
+      36 +  <aside id="legend-rail">                                     
+      37 +    <div class="spine">                                        
+      38 +      <h1>Entities</h1>                                        
+      39 +      <ul class="legend-list">                                 
+      40 +        <li><span class="dot person"></span>Person</li>        
+      41 +        <li><span class="dot place"></span>Place</li>          
+      42 +        <li><span class="dot date"></span>Date</li>            
+      43 +        <li><span class="dot org"></span>Organisation</li>     
+      44 +        <li><span class="dot bibl"></span>Reference</li>       
+      45 +      </ul>                                                    
+      46 +      <label class="toggle"><input type="checkbox" id="show-tag
+         +s" checked><span>show tags</span></label>                      
+      47 +      <div class="ornament">❦</div>                            
+      48 +    </div>                                                     
+      49 +  </aside>                                                     
+      50 +                                                               
+      51 +</div>                                                         
+      52  <script src="app.js"></script>
+      53  </body>
+      54  </html>
+
+● Write(styles.css)
+  ⎿  Added 326 lines, removed 91 lines
+        1 +/* Darwin Correspondence — leather-and-parchment theme */     
+        2 +                                                              
+        3  :root {
+        2 -  --bg: #faf7f1;                                              
+        3 -  --ink: #1f1b16;                                             
+        4 -  --muted: #6b6357;                                           
+        5 -  --rule: #e6dfd2;                                            
+        6 -  --accent: #5a3e2b;                                          
+        7 -  --person: #ffd9a8;                                          
+        8 -  --person-ink: #6b3a07;                                      
+        9 -  --place: #b8e4c9;                                           
+       10 -  --place-ink: #1f5733;                                       
+       11 -  --date: #c9d6ff;                                            
+       12 -  --date-ink: #1d3a8a;                                        
+       13 -  --org: #f4b8c4;                                             
+       14 -  --org-ink: #7a1f37;                                         
+       15 -  --bibl: #e6d4ff;                                            
+       16 -  --bibl-ink: #4a2785;                                        
+        4 +  --bg-deep:      #1a1208;                                    
+        5 +  --leather:      #3a2418;                                    
+        6 +  --leather-2:    #2a180e;                                    
+        7 +  --leather-edge: #5a3a24;                                    
+        8 +  --gold:         #d6b272;                                    
+        9 +  --gold-soft:    #b8945a;                                    
+       10 +  --gold-dim:     #8a6a3f;                                    
+       11 +  --parchment:    #efe2c4;                                    
+       12 +  --parchment-2:  #e3d3ae;                                    
+       13 +  --parchment-edge:#c9b388;                                   
+       14 +  --ink:          #2a1f12;                                    
+       15 +  --ink-soft:     #5b4a32;                                    
+       16 +                                                              
+       17 +  --person: #d99a5f;  --person-ink: #4a2807;                  
+       18 +  --place:  #7fb289;  --place-ink:  #1f3f25;                  
+       19 +  --date:   #8aa3d4;  --date-ink:   #1d2a55;                  
+       20 +  --org:    #c97a8b;  --org-ink:    #4a1422;                  
+       21 +  --bibl:   #b298d4;  --bibl-ink:   #321d5a;                  
+       22  }
+       23  
+       24  * { box-sizing: border-box; }
+       25  html, body { margin: 0; height: 100%; }
+       26 +                                                              
+       27  body {
+       22 -  font-family: "Iowan Old Style", "Palatino Linotype", Georgia
+          -, serif;                                                      
+       23 -  background: var(--bg);                                      
+       28 +  font-family: "EB Garamond", "Iowan Old Style", Georgia, seri
+          +f;                                                            
+       29 +  font-size: 18px;                                            
+       30    color: var(--ink);
+       31 +  background:                                                 
+       32 +    radial-gradient(ellipse at center, #2a1d10 0%, #0d0804 80%
+          +) fixed;                                                      
+       33 +  min-height: 100vh;                                          
+       34 +  padding: 32px;                                              
+       35 +}                                                             
+       36 +                                                              
+       37 +/* ---------- The bound-book frame ---------- */              
+       38 +                                                              
+       39 +.frame {                                                      
+       40    display: grid;
+       26 -  grid-template-columns: 300px 1fr;                           
+       27 -  height: 100vh;                                              
+       41 +  grid-template-columns: 230px 1fr 220px;                     
+       42 +  gap: 0;                                                     
+       43 +  max-width: 1280px;                                          
+       44 +  margin: 0 auto;                                             
+       45 +  min-height: calc(100vh - 64px);                             
+       46 +  background:                                                 
+       47 +    /* outer wood/leather shell */                            
+       48 +    linear-gradient(180deg, #2e1d10, #1f120a);                
+       49 +  border-radius: 10px;                                        
+       50 +  box-shadow:                                                 
+       51 +    0 30px 80px rgba(0,0,0,0.6),                              
+       52 +    0 0 0 2px #0a0603,                                        
+       53 +    inset 0 0 0 8px #4a2e1c,                                  
+       54 +    inset 0 0 0 10px #1a0e07,                                 
+       55 +    inset 0 0 60px rgba(0,0,0,0.55);                          
+       56 +  overflow: hidden;                                           
+       57 +  position: relative;                                         
+       58  }
+       59  
+       30 -#sidebar {                                                    
+       31 -  border-right: 1px solid var(--rule);                        
+       32 -  padding: 1.25rem 1rem;                                      
+       33 -  overflow-y: auto;                                           
+       34 -  background: #f3ede0;                                        
+       60 +.frame::before, .frame::after {                               
+       61 +  /* corner ornament dots */                                  
+       62 +  content: "";                                                
+       63 +  position: absolute;                                         
+       64 +  width: 10px; height: 10px;                                  
+       65 +  border-radius: 50%;                                         
+       66 +  background: radial-gradient(circle at 30% 30%, var(--gold), 
+          +var(--gold-dim) 70%, #3a2410);                                
+       67 +  box-shadow: 0 1px 2px rgba(0,0,0,0.6);                      
+       68  }
+       36 -#sidebar h1 {                                                 
+       69 +.frame::before { top: 18px; left: 18px; }                     
+       70 +.frame::after  { top: 18px; right: 18px;                      
+       71 +  box-shadow:                                                 
+       72 +    0 1px 2px rgba(0,0,0,0.6),                                
+       73 +    1186px 0 0 -1px transparent;                              
+       74 +}                                                             
+       75 +                                                              
+       76 +/* ---------- Side spines (sidebar + legend rail) ---------- *
+          +/                                                             
+       77 +                                                              
+       78 +#sidebar, #legend-rail {                                      
+       79 +  background:                                                 
+       80 +    /* tooled leather, vertical grain */                      
+       81 +    repeating-linear-gradient(                                
+       82 +      180deg,                                                 
+       83 +      transparent 0 6px,                                      
+       84 +      rgba(0,0,0,0.08) 6px 7px                                
+       85 +    ),                                                        
+       86 +    radial-gradient(ellipse at 50% 30%, #4a2e1c 0%, #2a180e 70
+          +%, #1a0e07 100%);                                             
+       87 +  position: relative;                                         
+       88 +  padding: 28px 18px;                                         
+       89 +  color: var(--gold);                                         
+       90 +  border-right: 1px solid #0a0603;                            
+       91 +}                                                             
+       92 +#legend-rail { border-right: 0; border-left: 1px solid #0a0603
+          +; }                                                           
+       93 +                                                              
+       94 +#sidebar::before, #legend-rail::before {                      
+       95 +  /* gold tooled border */                                    
+       96 +  content: "";                                                
+       97 +  position: absolute;                                         
+       98 +  inset: 16px 10px;                                           
+       99 +  border: 1px solid var(--gold-dim);                          
+      100 +  border-radius: 3px;                                         
+      101 +  pointer-events: none;                                       
+      102 +  box-shadow: inset 0 0 0 3px transparent, inset 0 0 0 4px rgb
+          +a(214,178,114,0.15);                                          
+      103 +}                                                             
+      104 +#sidebar::after, #legend-rail::after {                        
+      105 +  /* inner thin gold rule */                                  
+      106 +  content: "";                                                
+      107 +  position: absolute;                                         
+      108 +  inset: 22px 16px;                                           
+      109 +  border: 1px solid rgba(214,178,114,0.35);                   
+      110 +  border-radius: 2px;                                         
+      111 +  pointer-events: none;                                       
+      112 +}                                                             
+      113 +                                                              
+      114 +.spine {                                                      
+      115 +  position: relative;                                         
+      116 +  z-index: 1;                                                 
+      117 +  height: 100%;                                               
+      118 +  display: flex;                                              
+      119 +  flex-direction: column;                                     
+      120 +}                                                             
+      121 +                                                              
+      122 +#sidebar h1, #legend-rail h1 {                                
+      123 +  font-family: "Cinzel", "Playfair Display", serif;           
+      124 +  font-weight: 700;                                           
+      125    font-size: 1rem;
+       38 -  letter-spacing: 0.12em;                                     
+      126 +  letter-spacing: 0.32em;                                     
+      127    text-transform: uppercase;
+       40 -  color: var(--accent);                                       
+       41 -  margin: 0 0 1rem;                                           
+      128 +  color: var(--gold);                                         
+      129 +  text-align: center;                                         
+      130 +  margin: 8px 0 18px;                                         
+      131 +  text-shadow: 0 1px 0 #1a0e07, 0 0 12px rgba(214,178,114,0.25
+          +);                                                            
+      132 +  padding-bottom: 12px;                                       
+      133 +  border-bottom: 1px solid rgba(214,178,114,0.3);             
+      134  }
+      135 +                                                              
+      136  #filter {
+      137    width: 100%;
+      138    padding: 0.4rem 0.6rem;
+       46 -  border: 1px solid var(--rule);                              
+       47 -  background: var(--bg);                                      
+       48 -  border-radius: 4px;                                         
+      139 +  border: 1px solid rgba(214,178,114,0.35);                   
+      140 +  background: rgba(0,0,0,0.35);                               
+      141 +  color: var(--gold);                                         
+      142 +  border-radius: 2px;                                         
+      143    font: inherit;
+       50 -  margin-bottom: 0.75rem;                                     
+      144 +  font-size: 0.85rem;                                         
+      145 +  margin-bottom: 14px;                                        
+      146  }
+      147 +#filter::placeholder { color: var(--gold-dim); font-style: ita
+          +lic; }                                                        
+      148 +#filter:focus { outline: none; border-color: var(--gold); }   
+      149 +                                                              
+      150  #letter-list {
+      151    list-style: none;
+      152    padding: 0;
+      153    margin: 0;
+       56 -  font-family: ui-monospace, "SF Mono", Menlo, monospace;     
+       57 -  font-size: 0.85rem;                                         
+      154 +  flex: 1;                                                    
+      155 +  overflow-y: auto;                                           
+      156 +  font-family: "EB Garamond", serif;                          
+      157 +  font-size: 0.9rem;                                          
+      158  }
+      159  #letter-list li {
+       60 -  padding: 0.3rem 0.5rem;                                     
+      160 +  padding: 0.3rem 0.4rem;                                     
+      161    cursor: pointer;
+       62 -  border-radius: 3px;                                         
+       63 -  color: var(--muted);                                        
+      162 +  color: var(--gold-soft);                                    
+      163 +  border-radius: 2px;                                         
+      164 +  letter-spacing: 0.02em;                                     
+      165 +  transition: color 0.15s, background 0.15s;                  
+      166  }
+       65 -#letter-list li:hover { background: rgba(0,0,0,0.04); color: v
+          -ar(--ink); }                                                  
+      167 +#letter-list li:hover { color: var(--parchment); background: r
+          +gba(214,178,114,0.08); }                                      
+      168  #letter-list li.active {
+       67 -  background: var(--accent);                                  
+       68 -  color: #faf7f1;                                             
+      169 +  color: var(--parchment);                                    
+      170 +  background: rgba(214,178,114,0.18);                         
+      171 +  border-left: 2px solid var(--gold);                         
+      172 +  padding-left: 0.55rem;                                      
+      173  }
+      174  
+       71 -main {                                                        
+       72 -  overflow-y: auto;                                           
+       73 -  padding: 2rem 3rem 4rem;                                    
+       74 -  max-width: 900px;                                           
+      175 +/* scrollbar inside the spine */                              
+      176 +#letter-list::-webkit-scrollbar { width: 6px; }               
+      177 +#letter-list::-webkit-scrollbar-thumb { background: rgba(214,1
+          +78,114,0.3); border-radius: 3px; }                            
+      178 +                                                              
+      179 +.legend-list {                                                
+      180 +  list-style: none;                                           
+      181 +  padding: 0;                                                 
+      182 +  margin: 0 0 18px;                                           
+      183  }
+       76 -#meta h2 {                                                    
+       77 -  font-size: 1.6rem;                                          
+       78 -  margin: 0 0 0.25rem;                                        
+       79 -  color: var(--accent);                                       
+       80 -}                                                             
+       81 -#correspondence {                                             
+       82 -  color: var(--muted);                                        
+      184 +.legend-list li {                                             
+      185 +  display: flex;                                              
+      186 +  align-items: center;                                        
+      187 +  gap: 0.6rem;                                                
+      188 +  padding: 0.35rem 0.2rem;                                    
+      189 +  color: var(--gold-soft);                                    
+      190    font-size: 0.9rem;
+       84 -  margin-bottom: 1.5rem;                                      
+      191 +  letter-spacing: 0.03em;                                     
+      192  }
+       86 -#correspondence span + span::before { content: " · "; }       
+      193 +.legend-list .dot {                                           
+      194 +  width: 12px; height: 12px;                                  
+      195 +  border-radius: 50%;                                         
+      196 +  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4), 0 0 6px rgba(0,
+          +0,0,0.4);                                                     
+      197 +  flex-shrink: 0;                                             
+      198 +}                                                             
+      199 +.legend-list .dot.person { background: var(--person); }       
+      200 +.legend-list .dot.place  { background: var(--place); }        
+      201 +.legend-list .dot.date   { background: var(--date); }         
+      202 +.legend-list .dot.org    { background: var(--org); }          
+      203 +.legend-list .dot.bibl   { background: var(--bibl); }         
+      204  
+       88 -#legend {                                                     
+      205 +.toggle {                                                     
+      206    display: flex;
+       90 -  flex-wrap: wrap;                                            
+       91 -  gap: 0.5rem;                                                
+      207    align-items: center;
+       93 -  padding: 0.75rem 0;                                         
+       94 -  border-top: 1px solid var(--rule);                          
+       95 -  border-bottom: 1px solid var(--rule);                       
+      208 +  gap: 0.5rem;                                                
+      209 +  color: var(--gold-soft);                                    
+      210    font-size: 0.8rem;
+      211 +  letter-spacing: 0.05em;                                     
+      212 +  cursor: pointer;                                            
+      213 +  padding: 0.3rem 0.2rem;                                     
+      214 +  border-top: 1px solid rgba(214,178,114,0.2);                
+      215 +  padding-top: 0.8rem;                                        
+      216 +}                                                             
+      217 +.toggle input { accent-color: var(--gold); }                  
+      218 +                                                              
+      219 +.ornament {                                                   
+      220 +  text-align: center;                                         
+      221 +  margin-top: auto;                                           
+      222 +  padding-top: 1.2rem;                                        
+      223 +  font-size: 1.4rem;                                          
+      224 +  color: var(--gold-dim);                                     
+      225 +}                                                             
+      226 +                                                              
+      227 +/* ---------- Parchment reading area ---------- */            
+      228 +                                                              
+      229 +main {                                                        
+      230 +  padding: 28px 24px;                                         
+      231 +  position: relative;                                         
+      232 +}                                                             
+      233 +                                                              
+      234 +.parchment {                                                  
+      235 +  position: relative;                                         
+      236 +  background:                                                 
+      237 +    /* speckled noise via stacked radial gradients */         
+      238 +    radial-gradient(circle at 12% 22%, rgba(110,70,30,0.06) 0 
+          +1px, transparent 1px),                                        
+      239 +    radial-gradient(circle at 78% 35%, rgba(110,70,30,0.05) 0 
+          +1px, transparent 1px),                                        
+      240 +    radial-gradient(circle at 42% 80%, rgba(110,70,30,0.05) 0 
+          +1px, transparent 1px),                                        
+      241 +    radial-gradient(circle at 88% 75%, rgba(110,70,30,0.04) 0 
+          +1px, transparent 1px),                                        
+      242 +    radial-gradient(ellipse at 50% 0%, #f4e8cc 0%, #e8d7b2 60%
+          +, #d9c39a 100%);                                              
+      243 +  border: 1px solid var(--parchment-edge);                    
+      244 +  border-radius: 4px;                                         
+      245 +  padding: 48px 56px 64px;                                    
+      246 +  min-height: calc(100vh - 140px);                            
+      247 +  box-shadow:                                                 
+      248 +    inset 0 0 60px rgba(120, 80, 30, 0.18),                   
+      249 +    inset 0 0 0 1px rgba(255, 250, 235, 0.4),                 
+      250 +    0 6px 30px rgba(0,0,0,0.4);                               
+      251 +  color: var(--ink);                                          
+      252 +  overflow: hidden;                                           
+      253 +}                                                             
+      254 +                                                              
+      255 +/* edge darkening / aged corners */                           
+      256 +.parchment::before {                                          
+      257 +  content: "";                                                
+      258 +  position: absolute;                                         
+      259 +  inset: 0;                                                   
+      260 +  pointer-events: none;                                       
+      261 +  background:                                                 
+      262 +    radial-gradient(ellipse at 0% 0%,   rgba(90,55,20,0.25) 0%
+          +, transparent 35%),                                           
+      263 +    radial-gradient(ellipse at 100% 0%, rgba(90,55,20,0.20) 0%
+          +, transparent 35%),                                           
+      264 +    radial-gradient(ellipse at 0% 100%, rgba(90,55,20,0.20) 0%
+          +, transparent 40%),                                           
+      265 +    radial-gradient(ellipse at 100% 100%, rgba(90,55,20,0.25) 
+          +0%, transparent 40%);                                         
+      266 +}                                                             
+      267 +                                                              
+      268 +#meta {                                                       
+      269    margin-bottom: 1.5rem;
+      270 +  border-bottom: 1px solid var(--parchment-edge);             
+      271 +  padding-bottom: 1rem;                                       
+      272  }
+       99 -#legend .toggle {                                             
+      100 -  margin-left: auto;                                          
+      101 -  color: var(--muted);                                        
+      102 -  display: flex;                                              
+      103 -  align-items: center;                                        
+      104 -  gap: 0.3rem;                                                
+      273 +#title {                                                      
+      274 +  font-family: "Playfair Display", "EB Garamond", serif;      
+      275 +  font-weight: 700;                                           
+      276 +  font-style: italic;                                         
+      277 +  font-size: 2.6rem;                                          
+      278 +  line-height: 1.1;                                           
+      279 +  color: var(--ink);                                          
+      280 +  margin: 0 0 0.3rem;                                         
+      281 +  letter-spacing: -0.01em;                                    
+      282  }
+      283 +#correspondence {                                             
+      284 +  color: var(--ink-soft);                                     
+      285 +  font-size: 0.95rem;                                         
+      286 +  font-style: italic;                                         
+      287 +}                                                             
+      288 +#correspondence span + span::before { content: " · "; color: v
+          +ar(--gold-dim); font-style: normal; }                         
+      289  
+      290  #transcription {
+      108 -  line-height: 1.7;                                           
+      109 -  font-size: 1.05rem;                                         
+      291 +  font-family: "EB Garamond", "Iowan Old Style", Georgia, seri
+          +f;                                                            
+      292 +  font-size: 1.1rem;                                          
+      293 +  line-height: 1.75;                                          
+      294 +  color: var(--ink);                                          
+      295 +  text-align: justify;                                        
+      296 +  hyphens: auto;                                              
+      297  }
+      111 -#transcription p { margin: 0 0 1em; }                         
+      298 +#transcription p { margin: 0 0 1em; text-indent: 1.6em; }     
+      299 +#transcription p:first-of-type { text-indent: 0; }            
+      300 +#transcription p:first-of-type::first-letter {                
+      301 +  font-family: "Playfair Display", serif;                     
+      302 +  font-weight: 700;                                           
+      303 +  font-size: 3.4em;                                           
+      304 +  float: left;                                                
+      305 +  line-height: 0.85;                                          
+      306 +  margin: 0.08em 0.08em 0 0;                                  
+      307 +  color: var(--leather);                                      
+      308 +}                                                             
+      309 +.placeholder {                                                
+      310 +  font-style: italic;                                         
+      311 +  color: var(--ink-soft);                                     
+      312 +  text-align: center;                                         
+      313 +  text-indent: 0 !important;                                  
+      314 +}                                                             
+      315 +.placeholder::first-letter {                                  
+      316 +  font-size: inherit !important;                              
+      317 +  float: none !important;                                     
+      318 +  font-family: inherit !important;                            
+      319 +  color: inherit !important;                                  
+      320 +}                                                             
+      321  
+      322 +/* ---------- Entity highlights ---------- */                 
+      323 +                                                              
+      324  .ent {
+      114 -  padding: 0.05em 0.3em;                                      
+      115 -  border-radius: 3px;                                         
+      325 +  padding: 0.02em 0.28em;                                     
+      326 +  border-radius: 2px;                                         
+      327 +  box-decoration-break: clone;                                
+      328 +  -webkit-box-decoration-break: clone;                        
+      329    position: relative;
+      330 +  font-style: normal;                                         
+      331  }
+      118 -.ent.person { background: var(--person); color: var(--person-i
+          -nk); }                                                        
+      119 -.ent.place  { background: var(--place);  color: var(--place-in
+          -k); }                                                         
+      120 -.ent.date   { background: var(--date);   color: var(--date-ink
+          -); }                                                          
+      121 -.ent.org    { background: var(--org);    color: var(--org-ink)
+          -; }                                                           
+      122 -.ent.bibl   { background: var(--bibl);   color: var(--bibl-ink
+          -); }                                                          
+      332 +.ent.person { background: rgba(217,154, 95,0.55); color: var(-
+          +-person-ink); border-bottom: 1px solid rgba(217,154,95,0.9); }
+      333 +.ent.place  { background: rgba(127,178,137,0.5); color: var(--
+          +place-ink);  border-bottom: 1px solid rgba(127,178,137,0.95); 
+          +}                                                             
+      334 +.ent.date   { background: rgba(138,163,212,0.5); color: var(--
+          +date-ink);   border-bottom: 1px solid rgba(138,163,212,0.95); 
+          +}                                                             
+      335 +.ent.org    { background: rgba(201,122,139,0.5); color: var(--
+          +org-ink);    border-bottom: 1px solid rgba(201,122,139,0.95); 
+          +}                                                             
+      336 +.ent.bibl   { background: rgba(178,152,212,0.5); color: var(--
+          +bibl-ink);   border-bottom: 1px solid rgba(178,152,212,0.95); 
+          +}                                                             
+      337  
+      338  body.show-tags .ent::after {
+      339    content: attr(data-tag);
+      126 -  font-family: ui-monospace, "SF Mono", Menlo, monospace;     
+      127 -  font-size: 0.6em;                                           
+      128 -  text-transform: uppercase;                                  
+      129 -  letter-spacing: 0.05em;                                     
+      130 -  margin-left: 0.3em;                                         
+      131 -  opacity: 0.7;                                               
+      132 -  vertical-align: 0.2em;                                      
+      340 +  font-family: "Cinzel", "Iowan Old Style", serif;            
+      341 +  font-size: 0.55em;                                          
+      342 +  font-weight: 700;                                           
+      343 +  letter-spacing: 0.08em;                                     
+      344 +  margin-left: 0.35em;                                        
+      345 +  padding: 0.05em 0.3em;                                      
+      346 +  border-radius: 2px;                                         
+      347 +  background: rgba(0,0,0,0.15);                               
+      348 +  color: inherit;                                             
+      349 +  vertical-align: 0.25em;                                     
+      350  }
+      351  
+      352 +/* ---------- Entity summary cards ---------- */              
+      353 +                                                              
+      354  #entity-summary {
+      355    margin-top: 2.5rem;
+      356    padding-top: 1.5rem;
+      138 -  border-top: 1px solid var(--rule);                          
+      357 +  border-top: 1px solid var(--parchment-edge);                
+      358    display: grid;
+      359    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      141 -  gap: 1.5rem;                                                
+      142 -  font-size: 0.9rem;                                          
+      360 +  gap: 1.5rem 2rem;                                           
+      361 +  font-size: 0.95rem;                                         
+      362  }
+      363  #entity-summary h3 {
+      145 -  margin: 0 0 0.4rem;                                         
+      146 -  font-size: 0.75rem;                                         
+      147 -  letter-spacing: 0.1em;                                      
+      364 +  margin: 0 0 0.5rem;                                         
+      365 +  font-family: "Cinzel", serif;                               
+      366 +  font-size: 0.7rem;                                          
+      367 +  font-weight: 700;                                           
+      368 +  letter-spacing: 0.18em;                                     
+      369    text-transform: uppercase;
+      149 -  color: var(--muted);                                        
+      370 +  color: var(--ink-soft);                                     
+      371 +  border-bottom: 1px dotted var(--parchment-edge);            
+      372 +  padding-bottom: 0.3rem;                                     
+      373  }
+      151 -#entity-summary ul { margin: 0; padding-left: 1.1rem; }       
+      152 -#entity-summary li { margin-bottom: 0.2rem; }                 
+      374 +#entity-summary ul { margin: 0; padding-left: 1.1rem; list-sty
+          +le: "❧  "; }                                                  
+      375 +#entity-summary li { margin-bottom: 0.2rem; color: var(--ink);
+          + }                                                            
+      376 +                                                              
+      377 +/* ---------- Small screens ---------- */                     
+      378 +                                                              
+      379 +@media (max-width: 960px) {                                   
+      380 +  body { padding: 12px; }                                     
+      381 +  .frame { grid-template-columns: 1fr; }                      
+      382 +  #sidebar, #legend-rail { padding: 18px; }                   
+      383 +  #sidebar::before, #legend-rail::before,                     
+      384 +  #sidebar::after, #legend-rail::after { display: none; }     
+      385 +  .parchment { padding: 24px; }                               
+      386 +  #title { font-size: 2rem; }                                 
+      387 +}                                                             
+
+● Reload the page — server is still running. The site now wears the
+  leather-and-parchment look from the mockup:
+
+  - Dark outer shell with tooled gold borders, gilt corner studs, and
+  vertical-grain leather on both spines
+  - Left spine: "Letters" in Cinzel small-caps with the filter and letter list
+  in gold-on-leather
+  - Right spine: "Entities" legend with colour dots, plus the show-tags toggle
+  and a ❦ fleuron at the foot of each spine
+  - Centre parchment: speckled aged paper with darkened corners, Playfair 
+  Display italic title, drop-cap on the opening paragraph, EB Garamond body in
+  justified prose
+  - Entity highlights softened to amber/sage/slate tones that read naturally on
+  parchment; tag labels rendered in Cinzel
+  - Entity summary at the foot with dotted rules and ❧ leaf bullets
+
+  Fonts pull from Google Fonts (Playfair Display, Cinzel, EB Garamond). Layout
+  collapses to a single column under 960 px.
+
+✻ Cogitated for 1m 21s
+
+※ recap: Building a TEI Darwin-letter NER viewer at /home/ludek/Projects/DHDemoLive, just restyled it to a leather-and-parchment book theme matching your Gemini mockup. Next: reload http://localhost:8000 and tell me what to tweak. (disable recaps in /config)
+❯ We would like to have some context with each recognized entity few words      
+  before it and few words after it for every instance of the entity. I want     
+  these results to be exportable to csv.                                        
+  ⎿  ⧉ Selected 32 lines from index.html in Cursor
+
+● I'll add (1) a per-instance context view (N words before/after each entity)
+  and (2) CSV export — both for the current letter and across all letters.
+
+● Update(index.html)
+  ⎿  Added 10 lines
+      30          <p class="placeholder">Choose a letter from the shelf.<
+          /p>
+      31        </article>
+      32        <section id="entity-summary"></section>
+      33 +      <section id="instances">                                 
+      34 +        <div class="instances-header">                         
+      35 +          <h3>Instances in context</h3>                        
+      36 +          <div class="export-buttons">                         
+      37 +            <button id="export-letter" type="button">⬇ Export t
+         +his letter (CSV)</button>                                      
+      38 +            <button id="export-all" type="button">⬇ Export all 
+         +letters (CSV)</button>                                         
+      39 +          </div>                                               
+      40 +        </div>                                                 
+      41 +        <div id="instances-table"></div>                       
+      42 +      </section>                                               
+      43      </div>
+      44    </main>
+      45  
+
+● Write(app.js)
+  ⎿  Added 190 lines, removed 8 lines
+       1  const TEI = "http://www.tei-c.org/ns/1.0";
+       2  const TAG_FOR = { person: "PER", place: "LOC", date: "DATE", or
+          g: "ORG", bibl: "BIBL" };
+       3 -const state = { letters: [], current: null };                  
+       3 +const LABEL_NAMES = { person: "Person", place: "Place", date: "
+         +Date", org: "Organisation", bibl: "Reference" };               
+       4 +const CONTEXT_WORDS = 7;                                       
+       5  
+       6 +const state = {                                                
+       7 +  letters: [],                                                 
+       8 +  current: null,                                               
+       9 +  currentInstances: [], // for the loaded letter               
+      10 +};                                                             
+      11 +                                                               
+      12  async function init() {
+      13    state.letters = await fetch("letters.json").then(r => r.json(
+          ));
+      14    renderList();
+     ...
+      18    document.getElementById("show-tags").addEventListener("change
+          ", e =>
+      19      document.body.classList.toggle("show-tags", e.target.checke
+          d)
+      20    );
+      21 +  document.getElementById("export-letter").addEventListener("cl
+         +ick", exportCurrentLetter);                                    
+      22 +  document.getElementById("export-all").addEventListener("click
+         +", exportAllLetters);                                          
+      23    document.body.classList.add("show-tags");
+      24    if (state.letters.length) loadLetter(state.letters[0]);
+      25  }
+     ...
+      69    const target = document.getElementById("transcription");
+      70    target.innerHTML = "";
+      71    const counts = { person: [], place: [], date: [], org: [], bi
+          bl: [] };
+      72 +  const instances = [];                                        
+      73  
+      74    if (!nerData.paragraphs?.length) {
+      65 -    target.textContent = "(no annotations available — run ner_p
+         -reprocess.py)";                                                
+      75 +    target.innerHTML = "<p class='placeholder'>(no annotations 
+         +available — run ner_preprocess.py)</p>";                       
+      76 +    state.currentInstances = [];                               
+      77      renderSummary(counts);
+      78 +    renderInstances([]);                                       
+      79      return;
+      80    }
+      81  
+      70 -  for (const para of nerData.paragraphs) {                     
+      82 +  nerData.paragraphs.forEach((para, paraIdx) => {              
+      83      const p = document.createElement("p");
+      84 +                                                               
+      85 +    // Reconstruct the paragraph's plain text so we can compute
+         + char offsets.                                                 
+      86 +    const fullText = para.segments.map(s => s.text).join("");  
+      87 +    let charPos = 0;                                           
+      88 +                                                               
+      89      for (const seg of para.segments) {
+      90 +      const segLen = seg.text.length;                          
+      91        if (!seg.label) {
+      92          p.appendChild(document.createTextNode(seg.text));
+      93        } else {
+     ...
+       98          p.appendChild(span);
+       99          const trimmed = seg.text.trim();
+      100          if (trimmed && counts[seg.label]) counts[seg.label].pu
+           sh(trimmed);
+      101 +                                                              
+      102 +        const start = charPos;                                
+      103 +        const end = charPos + segLen;                         
+      104 +        const { before, after } = extractContext(fullText, sta
+          +rt, end, CONTEXT_WORDS);                                      
+      105 +        instances.push({                                      
+      106 +          letter: stem,                                       
+      107 +          paragraph: paraIdx + 1,                             
+      108 +          label: seg.label,                                   
+      109 +          entity: trimmed,                                    
+      110 +          before,                                             
+      111 +          after,                                              
+      112 +        });                                                   
+      113        }
+      114 +      charPos += segLen;                                      
+      115      }
+      116      target.appendChild(p);
+       86 -  }                                                           
+      117 +  });                                                         
+      118  
+      119 +  state.currentInstances = instances;                         
+      120    renderSummary(counts);
+      121 +  renderInstances(instances);                                 
+      122  }
+      123  
+      124 +function extractContext(text, start, end, nWords) {           
+      125 +  const before = text.slice(0, start);                        
+      126 +  const after  = text.slice(end);                             
+      127 +  const beforeWords = before.split(/\s+/).filter(Boolean);    
+      128 +  const afterWords  = after.split(/\s+/).filter(Boolean);     
+      129 +  const ctxBefore = beforeWords.slice(-nWords).join(" ");     
+      130 +  const ctxAfter  = afterWords.slice(0, nWords).join(" ");    
+      131 +  // preserve leading/trailing ellipsis hints                 
+      132 +  const prefix = beforeWords.length > nWords ? "… " : "";     
+      133 +  const suffix = afterWords.length > nWords ? " …" : "";      
+      134 +  return {                                                    
+      135 +    before: (prefix + ctxBefore).replace(/\s+/g, " ").trim(), 
+      136 +    after:  (ctxAfter + suffix).replace(/\s+/g, " ").trim(),  
+      137 +  };                                                          
+      138 +}                                                             
+      139 +                                                              
+      140  function renderSummary(counts) {
+      141    const root = document.getElementById("entity-summary");
+      142    root.innerHTML = "";
+       94 -  const titles = { person: "Persons", place: "Places", date: "
+          -Dates", org: "Organisations", bibl: "Bibliography" };         
+       95 -  for (const key of Object.keys(titles)) {                    
+      143 +  for (const key of Object.keys(LABEL_NAMES)) {               
+      144      const items = counts[key];
+      145      if (!items.length) continue;
+      146      const col = document.createElement("div");
+      147      const h = document.createElement("h3");
+      100 -    h.textContent = `${titles[key]} (${items.length})`;       
+      148 +    h.textContent = `${LABEL_NAMES[key]} (${items.length})`;  
+      149      col.appendChild(h);
+      150      const ul = document.createElement("ul");
+      151      const seen = new Map();
+     ...
+      159      root.appendChild(col);
+      160    }
+      161    if (!root.children.length) {
+      114 -    root.innerHTML = "<p style='color:var(--muted)'>No entitie
+          -s found in this letter.</p>";                                 
+      162 +    root.innerHTML = "<p class='placeholder'>No entities found
+          + in this letter.</p>";                                        
+      163    }
+      164  }
+      165  
+      166 +function renderInstances(instances) {                         
+      167 +  const root = document.getElementById("instances-table");    
+      168 +  root.innerHTML = "";                                        
+      169 +  if (!instances.length) {                                    
+      170 +    root.innerHTML = "<p class='placeholder'>No instances to s
+          +how.</p>";                                                    
+      171 +    return;                                                   
+      172 +  }                                                           
+      173 +  const table = document.createElement("table");              
+      174 +  table.className = "instances";                              
+      175 +  table.innerHTML = `                                         
+      176 +    <thead>                                                   
+      177 +      <tr>                                                    
+      178 +        <th>#</th>                                            
+      179 +        <th>Type</th>                                         
+      180 +        <th>Entity</th>                                       
+      181 +        <th>Context</th>                                      
+      182 +        <th>¶</th>                                            
+      183 +      </tr>                                                   
+      184 +    </thead>                                                  
+      185 +    <tbody></tbody>                                           
+      186 +  `;                                                          
+      187 +  const tb = table.querySelector("tbody");                    
+      188 +  instances.forEach((it, i) => {                              
+      189 +    const tr = document.createElement("tr");                  
+      190 +    tr.innerHTML = `                                          
+      191 +      <td class="idx">${i + 1}</td>                           
+      192 +      <td><span class="ent ${it.label}" data-tag="${TAG_FOR[it
+          +.label]}">${escapeHtml(LABEL_NAMES[it.label])}</span></td>    
+      193 +      <td class="entity-cell">${escapeHtml(it.entity)}</td>   
+      194 +      <td class="ctx-cell">                                   
+      195 +        <span class="ctx-before">${escapeHtml(it.before)}</spa
+          +n>                                                            
+      196 +        <span class="ent ${it.label}">${escapeHtml(it.entity)}
+          +</span>                                                       
+      197 +        <span class="ctx-after">${escapeHtml(it.after)}</span>
+      198 +      </td>                                                   
+      199 +      <td class="para">${it.paragraph}</td>                   
+      200 +    `;                                                        
+      201 +    tb.appendChild(tr);                                       
+      202 +  });                                                         
+      203 +  root.appendChild(table);                                    
+      204 +}                                                             
+      205 +                                                              
+      206 +function escapeHtml(s) {                                      
+      207 +  return String(s).replace(/[&<>"']/g, c => ({                
+      208 +    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'"
+          +: "&#39;"                                                     
+      209 +  }[c]));                                                     
+      210 +}                                                             
+      211 +                                                              
+      212 +// ---------- CSV export ----------                           
+      213 +                                                              
+      214 +const CSV_COLUMNS = ["letter", "paragraph", "label", "entity",
+          + "context_before", "context_after", "full_context"];          
+      215 +                                                              
+      216 +function instancesToCsv(rows) {                               
+      217 +  const header = CSV_COLUMNS.join(",");                       
+      218 +  const body = rows.map(it => {                               
+      219 +    const full = [it.before, it.entity, it.after].filter(Boole
+          +an).join(" ").replace(/\s+/g, " ").trim();                    
+      220 +    return [                                                  
+      221 +      it.letter,                                              
+      222 +      it.paragraph,                                           
+      223 +      it.label,                                               
+      224 +      it.entity,                                              
+      225 +      it.before,                                              
+      226 +      it.after,                                               
+      227 +      full,                                                   
+      228 +    ].map(csvEscape).join(",");                               
+      229 +  });                                                         
+      230 +  return [header, ...body].join("\n") + "\n";                 
+      231 +}                                                             
+      232 +                                                              
+      233 +function csvEscape(v) {                                       
+      234 +  const s = v == null ? "" : String(v);                       
+      235 +  if (/[",\n\r]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+      236 +  return s;                                                   
+      237 +}                                                             
+      238 +                                                              
+      239 +function downloadCsv(filename, content) {                     
+      240 +  const blob = new Blob([content], { type: "text/csv;charset=u
+          +tf-8" });                                                     
+      241 +  const url = URL.createObjectURL(blob);                      
+      242 +  const a = document.createElement("a");                      
+      243 +  a.href = url;                                               
+      244 +  a.download = filename;                                      
+      245 +  document.body.appendChild(a);                               
+      246 +  a.click();                                                  
+      247 +  a.remove();                                                 
+      248 +  setTimeout(() => URL.revokeObjectURL(url), 0);              
+      249 +}                                                             
+      250 +                                                              
+      251 +function exportCurrentLetter() {                              
+      252 +  if (!state.currentInstances.length) {                       
+      253 +    alert("No entities to export for this letter.");          
+      254 +    return;                                                   
+      255 +  }                                                           
+      256 +  const stem = state.current.replace(/\.xml$/, "");           
+      257 +  downloadCsv(`${stem}-entities.csv`, instancesToCsv(state.cur
+          +rentInstances));                                              
+      258 +}                                                             
+      259 +                                                              
+      260 +async function exportAllLetters() {                           
+      261 +  const btn = document.getElementById("export-all");          
+      262 +  btn.disabled = true;                                        
+      263 +  const original = btn.textContent;                           
+      264 +  btn.textContent = "Collecting…";                            
+      265 +  try {                                                       
+      266 +    const all = [];                                           
+      267 +    for (const name of state.letters) {                       
+      268 +      const stem = name.replace(/\.xml$/, "");                
+      269 +      const resp = await fetch(`data/ner/${stem}.json`);      
+      270 +      if (!resp.ok) continue;                                 
+      271 +      const data = await resp.json();                         
+      272 +      data.paragraphs?.forEach((para, paraIdx) => {           
+      273 +        const fullText = para.segments.map(s => s.text).join("
+          +");                                                           
+      274 +        let charPos = 0;                                      
+      275 +        for (const seg of para.segments) {                    
+      276 +          const segLen = seg.text.length;                     
+      277 +          if (seg.label) {                                    
+      278 +            const { before, after } = extractContext(fullText,
+          + charPos, charPos + segLen, CONTEXT_WORDS);                   
+      279 +            all.push({                                        
+      280 +              letter: stem,                                   
+      281 +              paragraph: paraIdx + 1,                         
+      282 +              label: seg.label,                               
+      283 +              entity: seg.text.trim(),                        
+      284 +              before,                                         
+      285 +              after,                                          
+      286 +            });                                               
+      287 +          }                                                   
+      288 +          charPos += segLen;                                  
+      289 +        }                                                     
+      290 +      });                                                     
+      291 +    }                                                         
+      292 +    if (!all.length) { alert("No entities found."); return; } 
+      293 +    downloadCsv("darwin-letters-entities.csv", instancesToCsv(
+          +all));                                                        
+      294 +  } finally {                                                 
+      295 +    btn.disabled = false;                                     
+      296 +    btn.textContent = original;                               
+      297 +  }                                                           
+      298 +}                                                             
+      299 +                                                              
+      300  init();
+
+● Now add styles for the instances table and export buttons, keeping the
+  parchment aesthetic.
+
+● Update(styles.css)
+  ⎿  Added 80 lines
+      374  #entity-summary ul { margin: 0; padding-left: 1.1rem; list-sty
+           le: "❧  "; }
+      375  #entity-summary li { margin-bottom: 0.2rem; color: var(--ink);
+            }
+      376  
+      377 +/* ---------- Instances table ---------- */                   
+      378 +                                                              
+      379 +#instances {                                                  
+      380 +  margin-top: 2.5rem;                                         
+      381 +  padding-top: 1.5rem;                                        
+      382 +  border-top: 1px solid var(--parchment-edge);                
+      383 +}                                                             
+      384 +.instances-header {                                           
+      385 +  display: flex;                                              
+      386 +  align-items: center;                                        
+      387 +  justify-content: space-between;                             
+      388 +  gap: 1rem;                                                  
+      389 +  flex-wrap: wrap;                                            
+      390 +  margin-bottom: 1rem;                                        
+      391 +}                                                             
+      392 +.instances-header h3 {                                        
+      393 +  margin: 0;                                                  
+      394 +  font-family: "Cinzel", serif;                               
+      395 +  font-size: 0.75rem;                                         
+      396 +  font-weight: 700;                                           
+      397 +  letter-spacing: 0.18em;                                     
+      398 +  text-transform: uppercase;                                  
+      399 +  color: var(--ink-soft);                                     
+      400 +}                                                             
+      401 +.export-buttons { display: flex; gap: 0.6rem; }               
+      402 +.export-buttons button {                                      
+      403 +  font-family: "EB Garamond", serif;                          
+      404 +  font-size: 0.85rem;                                         
+      405 +  letter-spacing: 0.03em;                                     
+      406 +  color: var(--parchment);                                    
+      407 +  background: linear-gradient(180deg, var(--leather-edge), var
+          +(--leather-2));                                               
+      408 +  border: 1px solid var(--gold-dim);                          
+      409 +  border-radius: 3px;                                         
+      410 +  padding: 0.4rem 0.85rem;                                    
+      411 +  cursor: pointer;                                            
+      412 +  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 1px 2px 
+          +rgba(0,0,0,0.3);                                              
+      413 +  transition: filter 0.15s;                                   
+      414 +}                                                             
+      415 +.export-buttons button:hover { filter: brightness(1.18); borde
+          +r-color: var(--gold); }                                       
+      416 +.export-buttons button:disabled { opacity: 0.6; cursor: wait; 
+          +}                                                             
+      417 +                                                              
+      418 +table.instances {                                             
+      419 +  width: 100%;                                                
+      420 +  border-collapse: collapse;                                  
+      421 +  font-size: 0.92rem;                                         
+      422 +  background: rgba(255, 248, 225, 0.45);                      
+      423 +  border: 1px solid var(--parchment-edge);                    
+      424 +  border-radius: 3px;                                         
+      425 +  overflow: hidden;                                           
+      426 +}                                                             
+      427 +table.instances th {                                          
+      428 +  font-family: "Cinzel", serif;                               
+      429 +  font-size: 0.65rem;                                         
+      430 +  font-weight: 700;                                           
+      431 +  letter-spacing: 0.15em;                                     
+      432 +  text-transform: uppercase;                                  
+      433 +  color: var(--ink-soft);                                     
+      434 +  text-align: left;                                           
+      435 +  padding: 0.55rem 0.75rem;                                   
+      436 +  background: rgba(201, 179, 136, 0.35);                      
+      437 +  border-bottom: 1px solid var(--parchment-edge);             
+      438 +}                                                             
+      439 +table.instances td {                                          
+      440 +  padding: 0.5rem 0.75rem;                                    
+      441 +  vertical-align: top;                                        
+      442 +  border-bottom: 1px dotted rgba(180, 150, 100, 0.4);         
+      443 +}                                                             
+      444 +table.instances tr:last-child td { border-bottom: 0; }        
+      445 +table.instances td.idx { color: var(--ink-soft); font-variant-
+          +numeric: tabular-nums; width: 2.5em; }                        
+      446 +table.instances td.entity-cell { font-weight: 500; white-space
+          +: nowrap; max-width: 14em; overflow: hidden; text-overflow: el
+          +lipsis; }                                                     
+      447 +table.instances td.ctx-cell { line-height: 1.55; }            
+      448 +table.instances td.para { color: var(--ink-soft); text-align: 
+          +right; width: 2.2em; font-variant-numeric: tabular-nums; }    
+      449 +.ctx-before, .ctx-after { color: var(--ink-soft); font-style: 
+          +italic; }                                                     
+      450 +.ctx-before { margin-right: 0.25em; }                         
+      451 +.ctx-after  { margin-left: 0.25em; }                          
+      452 +                                                              
+      453 +/* in the type column we render a plain label, not text-decora
+          +ted */                                                        
+      454 +table.instances td .ent { padding: 0.05em 0.4em; font-size: 0.
+          +78em; }                                                       
+      455 +body.show-tags table.instances td .ent::after { display: none;
+          + }                                                            
+      456 +                                                              
+      457  /* ---------- Small screens ---------- */
+      458  
+      459  @media (max-width: 960px) {
+
+● Reload — each entity now has an "Instances in context" table beneath the
+  summary, showing 7 words before and after every occurrence, with two export
+  buttons:
+
+  - ⬇ Export this letter (CSV) — downloads DCP-LETT-XXXX-entities.csv
+  - ⬇ Export all letters (CSV) — fetches every letter's annotations and
+  downloads a combined darwin-letters-entities.csv
+
+  CSV columns: letter, paragraph, label, entity, context_before, context_after, 
+  full_context. Values are properly quoted and escaped (commas, quotes, newlines
+   handled). The "full_context" field is the joined before + entity + after,
+  useful for direct text analysis in spreadsheet tools.
+
+✻ Worked for 1m 6s
+
+❯ I am pushing the buttons but nothing is happening                             
+  ⎿  ⧉ Selected 42 lines from index.html in Cursor
+
+● Likely an init-order problem: I attach the export-button listeners inside
+  async init(), after await fetch("letters.json"). If anything in that fetch is
+  slow or errors, the listeners never attach — clicking the buttons silently
+  does nothing. Also possible: the browser cached the old app.js.
+
+  Let me fix the architecture so listeners attach synchronously at script load.
+
+● Update(app.js)
+  ⎿  Added 12 lines, removed 3 lines
+       9    currentInstances: [], // for the loaded letter
+      10  };
+      11  
+      12 -async function init() {                                        
+      13 -  state.letters = await fetch("letters.json").then(r => r.json(
+         -));                                                            
+      14 -  renderList();                                                
+      12 +function bindUi() {                                            
+      13    document.getElementById("filter").addEventListener("input", e
+           =>
+      14      renderList(e.target.value.toLowerCase())
+      15    );
+     ...
+      19    document.getElementById("export-letter").addEventListener("cl
+          ick", exportCurrentLetter);
+      20    document.getElementById("export-all").addEventListener("click
+          ", exportAllLetters);
+      21    document.body.classList.add("show-tags");
+      22 +}                                                              
+      23 +                                                               
+      24 +async function init() {                                        
+      25 +  bindUi();                                                    
+      26 +  try {                                                        
+      27 +    state.letters = await fetch("letters.json").then(r => r.jso
+         +n());                                                          
+      28 +  } catch (err) {                                              
+      29 +    console.error("Failed to load letters.json", err);         
+      30 +    return;                                                    
+      31 +  }                                                            
+      32 +  renderList();                                                
+      33    if (state.letters.length) loadLetter(state.letters[0]);
+      34  }
+      35  
+
+● Now do a hard reload to bust the cached app.js:
+
+  - Chrome / Firefox: Ctrl+Shift+R (or hold Shift while clicking reload)
+  - Or open DevTools → Network tab → check "Disable cache" → reload
+
+  After the hard reload, click the buttons. If they still do nothing, open
+  DevTools → Console and paste any red errors you see — that'll show whether
+  it's still an init failure or something else (e.g., browser blocking the
+  download). The "Export this letter" button should immediately trigger a CSV
+  download; the "Export all letters" button shows "Collecting…" while it fetches
+   all 36 JSONs, then downloads.
+
+✻ Churned for 20s
+
+❯ Can we add a functionality that allows for the user to add its own name for   
+  an entity, for example animal?                                                
+
+● I'll add user-defined entity categories: pick a name + colour, list terms, and
+   all matches across letters get highlighted, counted, and exported alongside
+  the spaCy entities. Saved in localStorage.
+
+● Update(index.html)
+  ⎿  Added 10 lines
+      30          <p class="placeholder">Choose a letter from the shelf.<
+          /p>
+      31        </article>
+      32        <section id="entity-summary"></section>
+      33 +                                                               
+      34 +      <section id="custom-panel">                              
+      35 +        <div class="custom-header">                            
+      36 +          <h3>Custom entities</h3>                             
+      37 +          <button id="add-category" type="button" class="ghost"
+         +>+ Add category</button>                                       
+      38 +        </div>                                                 
+      39 +        <p class="custom-hint">Define your own categories (e.g.
+         + <em>Animal</em>, <em>Ship</em>) and the terms that belong to t
+         +hem. Matches are highlighted, counted, and exported.</p>       
+      40 +        <div id="categories"></div>                            
+      41 +      </section>                                               
+      42 +                                                               
+      43        <section id="instances">
+      44          <div class="instances-header">
+      45            <h3>Instances in context</h3>
+
+● Write(app.js)
+  ⎿  Added 318 lines, removed 84 lines
+       2  const TAG_FOR = { person: "PER", place: "LOC", date: "DATE", or
+          g: "ORG", bibl: "BIBL" };
+       3  const LABEL_NAMES = { person: "Person", place: "Place", date: "
+          Date", org: "Organisation", bibl: "Reference" };
+       4  const CONTEXT_WORDS = 7;
+       5 +const STORAGE_KEY = "darwin-ner-custom-v1";                    
+       6  
+       7 +const DEFAULT_COLORS = ["#c2853b", "#6d9f78", "#7d8fc2", "#b86a
+         +83", "#9a7fbd", "#d4a14f", "#7fa9a8", "#a05b3f"];              
+       8 +                                                               
+       9  const state = {
+      10    letters: [],
+      11    current: null,
+       9 -  currentInstances: [], // for the loaded letter               
+      12 +  currentInstances: [],                                        
+      13 +  customCats: [], // [{ id, name, color, terms: [] }]          
+      14  };
+      15  
+      16 +// ---------------- init / bootstrap ----------------          
+      17 +                                                               
+      18  function bindUi() {
+      19    document.getElementById("filter").addEventListener("input", e
+           =>
+      20      renderList(e.target.value.toLowerCase())
+     ...
+      24    );
+      25    document.getElementById("export-letter").addEventListener("cl
+          ick", exportCurrentLetter);
+      26    document.getElementById("export-all").addEventListener("click
+          ", exportAllLetters);
+      27 +  document.getElementById("add-category").addEventListener("cli
+         +ck", addCategoryFlow);                                         
+      28    document.body.classList.add("show-tags");
+      29  }
+      30  
+      31  async function init() {
+      32    bindUi();
+      33 +  loadCustom();                                                
+      34 +  renderCustomPanel();                                         
+      35    try {
+      36      state.letters = await fetch("letters.json").then(r => r.jso
+          n());
+      37    } catch (err) {
+     ...
+       42    if (state.letters.length) loadLetter(state.letters[0]);
+       43  }
+       44  
+       45 +// ---------------- custom categories ----------------        
+       46 +                                                              
+       47 +function loadCustom() {                                       
+       48 +  try {                                                       
+       49 +    const raw = localStorage.getItem(STORAGE_KEY);            
+       50 +    state.customCats = raw ? JSON.parse(raw) : [];            
+       51 +  } catch { state.customCats = []; }                          
+       52 +}                                                             
+       53 +                                                              
+       54 +function saveCustom() {                                       
+       55 +  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.custo
+          +mCats));                                                      
+       56 +  refreshHighlightStyles();                                   
+       57 +}                                                             
+       58 +                                                              
+       59 +function newId() { return "c" + Math.random().toString(36).sli
+          +ce(2, 9); }                                                   
+       60 +                                                              
+       61 +function addCategoryFlow() {                                  
+       62 +  const name = prompt("Name of the new category (e.g. Animal, 
+          +Ship, Species):");                                            
+       63 +  if (!name || !name.trim()) return;                          
+       64 +  const color = DEFAULT_COLORS[state.customCats.length % DEFAU
+          +LT_COLORS.length];                                            
+       65 +  state.customCats.push({ id: newId(), name: name.trim(), colo
+          +r, terms: [] });                                              
+       66 +  saveCustom();                                               
+       67 +  renderCustomPanel();                                        
+       68 +  reloadCurrent();                                            
+       69 +}                                                             
+       70 +                                                              
+       71 +function deleteCategory(id) {                                 
+       72 +  if (!confirm("Delete this category?")) return;              
+       73 +  state.customCats = state.customCats.filter(c => c.id !== id)
+          +;                                                             
+       74 +  saveCustom();                                               
+       75 +  renderCustomPanel();                                        
+       76 +  reloadCurrent();                                            
+       77 +}                                                             
+       78 +                                                              
+       79 +function updateCategory(id, patch) {                          
+       80 +  const c = state.customCats.find(c => c.id === id);          
+       81 +  if (!c) return;                                             
+       82 +  Object.assign(c, patch);                                    
+       83 +  saveCustom();                                               
+       84 +}                                                             
+       85 +                                                              
+       86 +function reloadCurrent() {                                    
+       87 +  if (state.current) loadLetter(state.current);               
+       88 +}                                                             
+       89 +                                                              
+       90 +function renderCustomPanel() {                                
+       91 +  const root = document.getElementById("categories");         
+       92 +  root.innerHTML = "";                                        
+       93 +  if (!state.customCats.length) {                             
+       94 +    root.innerHTML = "<p class='placeholder'>No custom categor
+          +ies yet.</p>";                                                
+       95 +    refreshHighlightStyles();                                 
+       96 +    return;                                                   
+       97 +  }                                                           
+       98 +  for (const cat of state.customCats) {                       
+       99 +    const card = document.createElement("div");               
+      100 +    card.className = "category-card";                         
+      101 +    card.dataset.catId = cat.id;                              
+      102 +    card.innerHTML = `                                        
+      103 +      <div class="cat-head">                                  
+      104 +        <span class="cat-swatch" style="background:${cat.color
+          +}"></span>                                                    
+      105 +        <input class="cat-name" type="text" value="${escapeHtm
+          +l(cat.name)}">                                                
+      106 +        <input class="cat-color" type="color" value="${cat.col
+          +or}" title="colour">                                          
+      107 +        <span class="cat-count">${cat.terms.length} term${cat.
+          +terms.length === 1 ? "" : "s"}</span>                         
+      108 +        <button class="cat-del ghost" title="delete category">
+          +✕</button>                                                    
+      109 +      </div>                                                  
+      110 +      <div class="cat-terms">                                 
+      111 +        ${cat.terms.map(t => `<span class="term-chip" data-ter
+          +m="${escapeHtml(t)}">${escapeHtml(t)} <button class="term-x" t
+          +itle="remove">×</button></span>`).join("")}                   
+      112 +        <input class="term-input" type="text" placeholder="add
+          + term + Enter…" />                                            
+      113 +      </div>                                                  
+      114 +    `;                                                        
+      115 +    root.appendChild(card);                                   
+      116 +                                                              
+      117 +    card.querySelector(".cat-name").addEventListener("change",
+          + e => {                                                       
+      118 +      updateCategory(cat.id, { name: e.target.value.trim() || 
+          +cat.name });                                                  
+      119 +      reloadCurrent();                                        
+      120 +    });                                                       
+      121 +    card.querySelector(".cat-color").addEventListener("input",
+          + e => {                                                       
+      122 +      updateCategory(cat.id, { color: e.target.value });      
+      123 +      card.querySelector(".cat-swatch").style.background = e.t
+          +arget.value;                                                  
+      124 +      refreshHighlightStyles();                               
+      125 +      reloadCurrent();                                        
+      126 +    });                                                       
+      127 +    card.querySelector(".cat-del").addEventListener("click", (
+          +) => deleteCategory(cat.id));                                 
+      128 +                                                              
+      129 +    card.querySelectorAll(".term-x").forEach(btn => {         
+      130 +      btn.addEventListener("click", () => {                   
+      131 +        const term = btn.parentElement.dataset.term;          
+      132 +        const c = state.customCats.find(c => c.id === cat.id);
+      133 +        c.terms = c.terms.filter(t => t !== term);            
+      134 +        saveCustom();                                         
+      135 +        renderCustomPanel();                                  
+      136 +        reloadCurrent();                                      
+      137 +      });                                                     
+      138 +    });                                                       
+      139 +                                                              
+      140 +    const input = card.querySelector(".term-input");          
+      141 +    input.addEventListener("keydown", e => {                  
+      142 +      if (e.key !== "Enter") return;                          
+      143 +      e.preventDefault();                                     
+      144 +      const val = input.value.trim();                         
+      145 +      if (!val) return;                                       
+      146 +      const c = state.customCats.find(c => c.id === cat.id);  
+      147 +      // split on commas in case user pastes a list           
+      148 +      for (const piece of val.split(",").map(s => s.trim()).fi
+          +lter(Boolean)) {                                              
+      149 +        if (!c.terms.includes(piece)) c.terms.push(piece);    
+      150 +      }                                                       
+      151 +      saveCustom();                                           
+      152 +      renderCustomPanel();                                    
+      153 +      reloadCurrent();                                        
+      154 +    });                                                       
+      155 +  }                                                           
+      156 +  refreshHighlightStyles();                                   
+      157 +}                                                             
+      158 +                                                              
+      159 +// Inject CSS rules for custom-category colours.              
+      160 +function refreshHighlightStyles() {                           
+      161 +  let style = document.getElementById("custom-cat-styles");   
+      162 +  if (!style) {                                               
+      163 +    style = document.createElement("style");                  
+      164 +    style.id = "custom-cat-styles";                           
+      165 +    document.head.appendChild(style);                         
+      166 +  }                                                           
+      167 +  const rules = state.customCats.map(c => {                   
+      168 +    const c1 = withAlpha(c.color, 0.5);                       
+      169 +    const c2 = withAlpha(c.color, 0.95);                      
+      170 +    const sel = `.ent.cat-${c.id}`;                           
+      171 +    return `${sel}{background:${c1};border-bottom:1px solid ${
+          +c2};color:${darken(c.color, 0.55)};}`;                        
+      172 +  }).join("\n");                                              
+      173 +  style.textContent = rules;                                  
+      174 +}                                                             
+      175 +                                                              
+      176 +function withAlpha(hex, a) {                                  
+      177 +  const { r, g, b } = parseHex(hex);                          
+      178 +  return `rgba(${r},${g},${b},${a})`;                         
+      179 +}                                                             
+      180 +function darken(hex, factor) {                                
+      181 +  const { r, g, b } = parseHex(hex);                          
+      182 +  return `rgb(${Math.round(r * (1 - factor))},${Math.round(g *
+          + (1 - factor))},${Math.round(b * (1 - factor))})`;            
+      183 +}                                                             
+      184 +function parseHex(hex) {                                      
+      185 +  const m = hex.replace("#", "");                             
+      186 +  return {                                                    
+      187 +    r: parseInt(m.slice(0, 2), 16),                           
+      188 +    g: parseInt(m.slice(2, 4), 16),                           
+      189 +    b: parseInt(m.slice(4, 6), 16),                           
+      190 +  };                                                          
+      191 +}                                                             
+      192 +                                                              
+      193 +function buildCustomRegex() {                                 
+      194 +  const items = [];                                           
+      195 +  for (const cat of state.customCats) {                       
+      196 +    for (const t of cat.terms) items.push({ cat, term: t });  
+      197 +  }                                                           
+      198 +  if (!items.length) return null;                             
+      199 +  items.sort((a, b) => b.term.length - a.term.length);        
+      200 +  const alt = items.map(it => it.term.replace(/[.*+?^${}()|[\]
+          +\\]/g, "\\$&")).join("|");                                    
+      201 +  const re = new RegExp(`\\b(?:${alt})\\b`, "gi");            
+      202 +  // Lookup by lowercased term -> category                    
+      203 +  const lookup = new Map();                                   
+      204 +  for (const it of items) {                                   
+      205 +    const key = it.term.toLowerCase();                        
+      206 +    if (!lookup.has(key)) lookup.set(key, it.cat);            
+      207 +  }                                                           
+      208 +  return { re, lookup };                                      
+      209 +}                                                             
+      210 +                                                              
+      211 +// ---------------- list ----------------                     
+      212 +                                                              
+      213  function renderList(filter = "") {
+      214    const ul = document.getElementById("letter-list");
+      215    ul.innerHTML = "";
+     ...
+      223    }
+      224  }
+      225  
+      226 +// ---------------- letter loading ----------------           
+      227 +                                                              
+      228  async function loadLetter(name) {
+      229    state.current = name;
+      230    renderList(document.getElementById("filter").value.toLowerCa
+           se());
+     ...
+      236    ]);
+      237    const doc = new DOMParser().parseFromString(xmlText, "applic
+           ation/xml");
+      238  
+       60 -  // Header metadata                                          
+      239    document.getElementById("title").textContent =
+      240      doc.querySelector("titleStmt > title")?.textContent.trim()
+            ?? name;
+      241  
+     ...
+      255  
+      256    const target = document.getElementById("transcription");
+      257    target.innerHTML = "";
+       80 -  const counts = { person: [], place: [], date: [], org: [], b
+          -ibl: [] };                                                    
+      258 +  const counts = {};                                          
+      259    const instances = [];
+      260  
+      261    if (!nerData.paragraphs?.length) {
+     ...
+      266      return;
+      267    }
+      268  
+       91 -  nerData.paragraphs.forEach((para, paraIdx) => {             
+       92 -    const p = document.createElement("p");                    
+      269 +  const customMatcher = buildCustomRegex();                   
+      270  
+       94 -    // Reconstruct the paragraph's plain text so we can comput
+          -e char offsets.                                               
+      271 +  nerData.paragraphs.forEach((para, paraIdx) => {             
+      272 +    // 1) Convert spaCy segments to spans on full paragraph te
+          +xt.                                                           
+      273      const fullText = para.segments.map(s => s.text).join("");
+      274      let charPos = 0;
+       97 -                                                              
+      275 +    const spans = [];                                         
+      276      for (const seg of para.segments) {
+      277        const segLen = seg.text.length;
+      100 -      if (!seg.label) {                                       
+      101 -        p.appendChild(document.createTextNode(seg.text));     
+      102 -      } else {                                                
+      103 -        const span = document.createElement("span");          
+      104 -        span.className = "ent " + seg.label;                  
+      105 -        span.dataset.tag = TAG_FOR[seg.label] || seg.label.toU
+          -pperCase();                                                   
+      106 -        span.textContent = seg.text;                          
+      107 -        p.appendChild(span);                                  
+      108 -        const trimmed = seg.text.trim();                      
+      109 -        if (trimmed && counts[seg.label]) counts[seg.label].pu
+          -sh(trimmed);                                                  
+      110 -                                                              
+      111 -        const start = charPos;                                
+      112 -        const end = charPos + segLen;                         
+      113 -        const { before, after } = extractContext(fullText, sta
+          -rt, end, CONTEXT_WORDS);                                      
+      114 -        instances.push({                                      
+      115 -          letter: stem,                                       
+      116 -          paragraph: paraIdx + 1,                             
+      278 +      if (seg.label) {                                        
+      279 +        spans.push({                                          
+      280 +          start: charPos,                                     
+      281 +          end: charPos + segLen,                              
+      282 +          kind: "builtin",                                    
+      283            label: seg.label,
+      118 -          entity: trimmed,                                    
+      119 -          before,                                             
+      120 -          after,                                              
+      284          });
+      285        }
+      286        charPos += segLen;
+      287      }
+      288 +                                                              
+      289 +    // 2) Add custom matches.                                 
+      290 +    if (customMatcher) {                                      
+      291 +      customMatcher.re.lastIndex = 0;                         
+      292 +      let m;                                                  
+      293 +      while ((m = customMatcher.re.exec(fullText))) {         
+      294 +        const cat = customMatcher.lookup.get(m[0].toLowerCase(
+          +));                                                           
+      295 +        if (!cat) continue;                                   
+      296 +        spans.push({                                          
+      297 +          start: m.index,                                     
+      298 +          end: m.index + m[0].length,                         
+      299 +          kind: "custom",                                     
+      300 +          category: cat,                                      
+      301 +        });                                                   
+      302 +      }                                                       
+      303 +    }                                                         
+      304 +                                                              
+      305 +    // 3) Resolve overlaps: prefer custom over builtin; within
+          + same kind, prefer longer-then-earlier.                       
+      306 +    const resolved = resolveSpans(spans);                     
+      307 +                                                              
+      308 +    // 4) Render paragraph from resolved spans + plain text.  
+      309 +    const p = document.createElement("p");                    
+      310 +    let pos = 0;                                              
+      311 +    for (const s of resolved) {                               
+      312 +      if (s.start > pos) p.appendChild(document.createTextNode
+          +(fullText.slice(pos, s.start)));                              
+      313 +      const txt = fullText.slice(s.start, s.end);             
+      314 +      const span = renderEntitySpan(s, txt);                  
+      315 +      p.appendChild(span);                                    
+      316 +      const labelKey = s.kind === "custom" ? `cat:${s.category
+          +.id}` : s.label;                                              
+      317 +      const labelName = s.kind === "custom" ? s.category.name 
+          +: LABEL_NAMES[s.label];                                       
+      318 +      counts[labelKey] = counts[labelKey] || { name: labelName
+          +, color: s.kind === "custom" ? s.category.color : null, items:
+          + [] };                                                        
+      319 +      counts[labelKey].items.push(txt.trim());                
+      320 +      const { before, after } = extractContext(fullText, s.sta
+          +rt, s.end, CONTEXT_WORDS);                                    
+      321 +      instances.push({                                        
+      322 +        letter: stem,                                         
+      323 +        paragraph: paraIdx + 1,                               
+      324 +        label: labelName,                                     
+      325 +        labelKey,                                             
+      326 +        entity: txt.trim(),                                   
+      327 +        before,                                               
+      328 +        after,                                                
+      329 +      });                                                     
+      330 +      pos = s.end;                                            
+      331 +    }                                                         
+      332 +    if (pos < fullText.length) p.appendChild(document.createTe
+          +xtNode(fullText.slice(pos)));                                 
+      333      target.appendChild(p);
+      334    });
+      335  
+     ...
+      338    renderInstances(instances);
+      339  }
+      340  
+      341 +function renderEntitySpan(s, text) {                          
+      342 +  const span = document.createElement("span");                
+      343 +  if (s.kind === "custom") {                                  
+      344 +    span.className = `ent cat-${s.category.id}`;              
+      345 +    span.dataset.tag = abbrev(s.category.name);               
+      346 +    span.title = s.category.name;                             
+      347 +  } else {                                                    
+      348 +    span.className = "ent " + s.label;                        
+      349 +    span.dataset.tag = TAG_FOR[s.label] || s.label.toUpperCase
+          +();                                                           
+      350 +  }                                                           
+      351 +  span.textContent = text;                                    
+      352 +  return span;                                                
+      353 +}                                                             
+      354 +                                                              
+      355 +function abbrev(name) {                                       
+      356 +  const t = name.trim();                                      
+      357 +  if (!t) return "?";                                         
+      358 +  return t.replace(/[^A-Za-z]/g, "").slice(0, 4).toUpperCase()
+          + || t.slice(0, 4).toUpperCase();                              
+      359 +}                                                             
+      360 +                                                              
+      361 +function resolveSpans(spans) {                                
+      362 +  // sort: start asc, then custom-first, then longer-first    
+      363 +  spans = spans.slice().sort((a, b) => {                      
+      364 +    if (a.start !== b.start) return a.start - b.start;        
+      365 +    if (a.kind !== b.kind) return a.kind === "custom" ? -1 : 1
+          +;                                                             
+      366 +    return (b.end - b.start) - (a.end - a.start);             
+      367 +  });                                                         
+      368 +  const out = [];                                             
+      369 +  let cursor = 0;                                             
+      370 +  // Pre-pass: where custom and builtin overlap, drop the buil
+          +tin if custom wins.                                           
+      371 +  // Simplest is greedy non-overlap with the order above.     
+      372 +  for (const s of spans) {                                    
+      373 +    if (s.start < cursor) continue;                           
+      374 +    if (s.end <= s.start) continue;                           
+      375 +    out.push(s);                                              
+      376 +    cursor = s.end;                                           
+      377 +  }                                                           
+      378 +  return out;                                                 
+      379 +}                                                             
+      380 +                                                              
+      381  function extractContext(text, start, end, nWords) {
+      382    const before = text.slice(0, start);
+      383    const after  = text.slice(end);
+     ...
+      385    const afterWords  = after.split(/\s+/).filter(Boolean);
+      386    const ctxBefore = beforeWords.slice(-nWords).join(" ");
+      387    const ctxAfter  = afterWords.slice(0, nWords).join(" ");
+      140 -  // preserve leading/trailing ellipsis hints                 
+      388    const prefix = beforeWords.length > nWords ? "… " : "";
+      389    const suffix = afterWords.length > nWords ? " …" : "";
+      390    return {
+     ...
+      393    };
+      394  }
+      395  
+      396 +// ---------------- summary + instances ----------------      
+      397 +                                                              
+      398  function renderSummary(counts) {
+      399    const root = document.getElementById("entity-summary");
+      400    root.innerHTML = "";
+      152 -  for (const key of Object.keys(LABEL_NAMES)) {               
+      153 -    const items = counts[key];                                
+      154 -    if (!items.length) continue;                              
+      401 +  const keys = Object.keys(counts);                           
+      402 +  if (!keys.length) {                                         
+      403 +    root.innerHTML = "<p class='placeholder'>No entities found
+          + in this letter.</p>";                                        
+      404 +    return;                                                   
+      405 +  }                                                           
+      406 +  for (const k of keys) {                                     
+      407 +    const bucket = counts[k];                                 
+      408      const col = document.createElement("div");
+      409      const h = document.createElement("h3");
+      157 -    h.textContent = `${LABEL_NAMES[key]} (${items.length})`;  
+      410 +    h.textContent = `${bucket.name} (${bucket.items.length})`;
+      411 +    if (bucket.color) {                                       
+      412 +      const dot = document.createElement("span");             
+      413 +      dot.className = "h-dot";                                
+      414 +      dot.style.background = bucket.color;                    
+      415 +      h.prepend(dot);                                         
+      416 +    }                                                         
+      417      col.appendChild(h);
+      418      const ul = document.createElement("ul");
+      419      const seen = new Map();
+      161 -    for (const t of items) seen.set(t, (seen.get(t) || 0) + 1)
+          -;                                                             
+      420 +    for (const t of bucket.items) seen.set(t, (seen.get(t) || 
+          +0) + 1);                                                      
+      421      for (const [text, n] of [...seen.entries()].sort((a, b) =>
+            b[1] - a[1])) {
+      422        const li = document.createElement("li");
+      423        li.textContent = n > 1 ? `${text} ×${n}` : text;
+     ...
+      426      col.appendChild(ul);
+      427      root.appendChild(col);
+      428    }
+      170 -  if (!root.children.length) {                                
+      171 -    root.innerHTML = "<p class='placeholder'>No entities found
+          - in this letter.</p>";                                        
+      172 -  }                                                           
+      429  }
+      430  
+      431  function renderInstances(instances) {
+     ...
+      437    }
+      438    const table = document.createElement("table");
+      439    table.className = "instances";
+      184 -  table.innerHTML = `                                         
+      185 -    <thead>                                                   
+      186 -      <tr>                                                    
+      187 -        <th>#</th>                                            
+      188 -        <th>Type</th>                                         
+      189 -        <th>Entity</th>                                       
+      190 -        <th>Context</th>                                      
+      191 -        <th>¶</th>                                            
+      192 -      </tr>                                                   
+      193 -    </thead>                                                  
+      194 -    <tbody></tbody>                                           
+      195 -  `;                                                          
+      440 +  table.innerHTML = `<thead><tr><th>#</th><th>Type</th><th>Ent
+          +ity</th><th>Context</th><th>¶</th></tr></thead><tbody></tbody>
+          +`;                                                            
+      441    const tb = table.querySelector("tbody");
+      442    instances.forEach((it, i) => {
+      443      const tr = document.createElement("tr");
+      444      tr.innerHTML = `
+      445        <td class="idx">${i + 1}</td>
+      201 -      <td><span class="ent ${it.label}" data-tag="${TAG_FOR[it
+          -.label]}">${escapeHtml(LABEL_NAMES[it.label])}</span></td>    
+      446 +      <td>${escapeHtml(it.label)}</td>                        
+      447        <td class="entity-cell">${escapeHtml(it.entity)}</td>
+      448        <td class="ctx-cell">
+      449          <span class="ctx-before">${escapeHtml(it.before)}</spa
+           n>
+      205 -        <span class="ent ${it.label}">${escapeHtml(it.entity)}
+          -</span>                                                       
+      450 +        <strong>${escapeHtml(it.entity)}</strong>             
+      451          <span class="ctx-after">${escapeHtml(it.after)}</span>
+      452        </td>
+      453        <td class="para">${it.paragraph}</td>
+     ...
+      463    }[c]));
+      464  }
+      465  
+      221 -// ---------- CSV export ----------                           
+      466 +// ---------------- CSV export ----------------               
+      467  
+      468  const CSV_COLUMNS = ["letter", "paragraph", "label", "entity",
+            "context_before", "context_after", "full_context"];
+      469  
+     ...
+      471    const header = CSV_COLUMNS.join(",");
+      472    const body = rows.map(it => {
+      473      const full = [it.before, it.entity, it.after].filter(Boole
+           an).join(" ").replace(/\s+/g, " ").trim();
+      229 -    return [                                                  
+      230 -      it.letter,                                              
+      231 -      it.paragraph,                                           
+      232 -      it.label,                                               
+      233 -      it.entity,                                              
+      234 -      it.before,                                              
+      235 -      it.after,                                               
+      236 -      full,                                                   
+      237 -    ].map(csvEscape).join(",");                               
+      474 +    return [it.letter, it.paragraph, it.label, it.entity, it.b
+          +efore, it.after, full].map(csvEscape).join(",");              
+      475    });
+      476    return [header, ...body].join("\n") + "\n";
+      477  }
+      241 -                                                              
+      478  function csvEscape(v) {
+      479    const s = v == null ? "" : String(v);
+      480    if (/[",\n\r]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+      481    return s;
+      482  }
+      247 -                                                              
+      483  function downloadCsv(filename, content) {
+      484    const blob = new Blob([content], { type: "text/csv;charset=u
+           tf-8" });
+      485    const url = URL.createObjectURL(blob);
+      486    const a = document.createElement("a");
+      252 -  a.href = url;                                               
+      253 -  a.download = filename;                                      
+      254 -  document.body.appendChild(a);                               
+      255 -  a.click();                                                  
+      256 -  a.remove();                                                 
+      487 +  a.href = url; a.download = filename;                        
+      488 +  document.body.appendChild(a); a.click(); a.remove();        
+      489    setTimeout(() => URL.revokeObjectURL(url), 0);
+      490  }
+      259 -                                                              
+      491  function exportCurrentLetter() {
+      261 -  if (!state.currentInstances.length) {                       
+      262 -    alert("No entities to export for this letter.");          
+      263 -    return;                                                   
+      264 -  }                                                           
+      492 +  if (!state.currentInstances.length) { alert("No entities to 
+          +export for this letter."); return; }                          
+      493    const stem = state.current.replace(/\.xml$/, "");
+      494    downloadCsv(`${stem}-entities.csv`, instancesToCsv(state.cur
+           rentInstances));
+      495  }
+      268 -                                                              
+      496  async function exportAllLetters() {
+      497    const btn = document.getElementById("export-all");
+      498    btn.disabled = true;
+      499    const original = btn.textContent;
+      500    btn.textContent = "Collecting…";
+      501    try {
+      502 +    const customMatcher = buildCustomRegex();                 
+      503      const all = [];
+      504      for (const name of state.letters) {
+      505        const stem = name.replace(/\.xml$/, "");
+     ...
+      509        data.paragraphs?.forEach((para, paraIdx) => {
+      510          const fullText = para.segments.map(s => s.text).join("
+           ");
+      511          let charPos = 0;
+      512 +        const spans = [];                                     
+      513          for (const seg of para.segments) {
+      514            const segLen = seg.text.length;
+      286 -          if (seg.label) {                                    
+      287 -            const { before, after } = extractContext(fullText,
+          - charPos, charPos + segLen, CONTEXT_WORDS);                   
+      288 -            all.push({                                        
+      289 -              letter: stem,                                   
+      290 -              paragraph: paraIdx + 1,                         
+      291 -              label: seg.label,                               
+      292 -              entity: seg.text.trim(),                        
+      293 -              before,                                         
+      294 -              after,                                          
+      295 -            });                                               
+      296 -          }                                                   
+      515 +          if (seg.label) spans.push({ start: charPos, end: cha
+          +rPos + segLen, kind: "builtin", label: seg.label });          
+      516            charPos += segLen;
+      517          }
+      518 +        if (customMatcher) {                                  
+      519 +          customMatcher.re.lastIndex = 0;                     
+      520 +          let m;                                              
+      521 +          while ((m = customMatcher.re.exec(fullText))) {     
+      522 +            const cat = customMatcher.lookup.get(m[0].toLowerC
+          +ase());                                                       
+      523 +            if (!cat) continue;                               
+      524 +            spans.push({ start: m.index, end: m.index + m[0].l
+          +ength, kind: "custom", category: cat });                      
+      525 +          }                                                   
+      526 +        }                                                     
+      527 +        for (const s of resolveSpans(spans)) {                
+      528 +          const txt = fullText.slice(s.start, s.end);         
+      529 +          const labelName = s.kind === "custom" ? s.category.n
+          +ame : LABEL_NAMES[s.label];                                   
+      530 +          const { before, after } = extractContext(fullText, s
+          +.start, s.end, CONTEXT_WORDS);                                
+      531 +          all.push({ letter: stem, paragraph: paraIdx + 1, lab
+          +el: labelName, entity: txt.trim(), before, after });          
+      532 +        }                                                     
+      533        });
+      534      }
+      535      if (!all.length) { alert("No entities found."); return; }
+
+● Update(styles.css)
+  ⎿  Added 127 lines
+      374  #entity-summary ul { margin: 0; padding-left: 1.1rem; list-sty
+           le: "❧  "; }
+      375  #entity-summary li { margin-bottom: 0.2rem; color: var(--ink);
+            }
+      376  
+      377 +/* ---------- Custom categories panel ---------- */           
+      378 +                                                              
+      379 +#custom-panel {                                               
+      380 +  margin-top: 2.5rem;                                         
+      381 +  padding-top: 1.5rem;                                        
+      382 +  border-top: 1px solid var(--parchment-edge);                
+      383 +}                                                             
+      384 +.custom-header {                                              
+      385 +  display: flex;                                              
+      386 +  align-items: center;                                        
+      387 +  justify-content: space-between;                             
+      388 +  margin-bottom: 0.5rem;                                      
+      389 +}                                                             
+      390 +.custom-header h3 {                                           
+      391 +  margin: 0;                                                  
+      392 +  font-family: "Cinzel", serif;                               
+      393 +  font-size: 0.75rem;                                         
+      394 +  font-weight: 700;                                           
+      395 +  letter-spacing: 0.18em;                                     
+      396 +  text-transform: uppercase;                                  
+      397 +  color: var(--ink-soft);                                     
+      398 +}                                                             
+      399 +.custom-hint {                                                
+      400 +  margin: 0 0 0.9rem;                                         
+      401 +  color: var(--ink-soft);                                     
+      402 +  font-style: italic;                                         
+      403 +  font-size: 0.92rem;                                         
+      404 +}                                                             
+      405 +                                                              
+      406 +button.ghost {                                                
+      407 +  font-family: "EB Garamond", serif;                          
+      408 +  font-size: 0.85rem;                                         
+      409 +  letter-spacing: 0.03em;                                     
+      410 +  color: var(--ink);                                          
+      411 +  background: rgba(255,248,225,0.5);                          
+      412 +  border: 1px solid var(--gold-dim);                          
+      413 +  border-radius: 3px;                                         
+      414 +  padding: 0.3rem 0.7rem;                                     
+      415 +  cursor: pointer;                                            
+      416 +  transition: background 0.15s, border-color 0.15s;           
+      417 +}                                                             
+      418 +button.ghost:hover { background: rgba(214,178,114,0.25); borde
+          +r-color: var(--gold); }                                       
+      419 +                                                              
+      420 +.category-card {                                              
+      421 +  background: rgba(255, 248, 225, 0.45);                      
+      422 +  border: 1px solid var(--parchment-edge);                    
+      423 +  border-radius: 3px;                                         
+      424 +  padding: 0.7rem 0.85rem;                                    
+      425 +  margin-bottom: 0.7rem;                                      
+      426 +}                                                             
+      427 +.cat-head {                                                   
+      428 +  display: flex;                                              
+      429 +  align-items: center;                                        
+      430 +  gap: 0.5rem;                                                
+      431 +  margin-bottom: 0.5rem;                                      
+      432 +}                                                             
+      433 +.cat-swatch {                                                 
+      434 +  width: 14px; height: 14px; border-radius: 50%;              
+      435 +  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.3);                
+      436 +  flex-shrink: 0;                                             
+      437 +}                                                             
+      438 +.cat-name {                                                   
+      439 +  font: inherit;                                              
+      440 +  font-size: 1rem;                                            
+      441 +  font-weight: 500;                                           
+      442 +  background: transparent;                                    
+      443 +  border: 1px solid transparent;                              
+      444 +  padding: 0.15rem 0.4rem;                                    
+      445 +  border-radius: 2px;                                         
+      446 +  color: var(--ink);                                          
+      447 +  flex: 1;                                                    
+      448 +  min-width: 6em;                                             
+      449 +}                                                             
+      450 +.cat-name:hover, .cat-name:focus { border-color: var(--parchme
+          +nt-edge); background: rgba(255,255,255,0.4); outline: none; } 
+      451 +.cat-color { width: 30px; height: 26px; border: 1px solid var(
+          +--parchment-edge); border-radius: 2px; padding: 0; background:
+          + transparent; cursor: pointer; }                              
+      452 +.cat-count { color: var(--ink-soft); font-size: 0.85rem; font-
+          +style: italic; }                                              
+      453 +.cat-del { font-size: 0.8rem; padding: 0.15rem 0.5rem; }      
+      454 +                                                              
+      455 +.cat-terms {                                                  
+      456 +  display: flex;                                              
+      457 +  flex-wrap: wrap;                                            
+      458 +  gap: 0.35rem;                                               
+      459 +  align-items: center;                                        
+      460 +}                                                             
+      461 +.term-chip {                                                  
+      462 +  display: inline-flex;                                       
+      463 +  align-items: center;                                        
+      464 +  gap: 0.25rem;                                               
+      465 +  background: rgba(214,178,114,0.25);                         
+      466 +  border: 1px solid var(--gold-dim);                          
+      467 +  border-radius: 999px;                                       
+      468 +  padding: 0.15rem 0.55rem;                                   
+      469 +  font-size: 0.88rem;                                         
+      470 +  color: var(--ink);                                          
+      471 +}                                                             
+      472 +.term-x {                                                     
+      473 +  border: 0;                                                  
+      474 +  background: transparent;                                    
+      475 +  color: var(--ink-soft);                                     
+      476 +  cursor: pointer;                                            
+      477 +  font-size: 1rem;                                            
+      478 +  line-height: 1;                                             
+      479 +  padding: 0 0.1rem;                                          
+      480 +}                                                             
+      481 +.term-x:hover { color: #7a1f37; }                             
+      482 +.term-input {                                                 
+      483 +  font: inherit;                                              
+      484 +  font-size: 0.88rem;                                         
+      485 +  background: transparent;                                    
+      486 +  border: 1px dashed var(--gold-dim);                         
+      487 +  border-radius: 999px;                                       
+      488 +  padding: 0.15rem 0.6rem;                                    
+      489 +  color: var(--ink);                                          
+      490 +  min-width: 8em;                                             
+      491 +  flex: 1;                                                    
+      492 +}                                                             
+      493 +.term-input:focus { outline: none; border-style: solid; border
+          +-color: var(--gold); background: rgba(255,255,255,0.4); }     
+      494 +                                                              
+      495 +.h-dot {                                                      
+      496 +  display: inline-block;                                      
+      497 +  width: 8px; height: 8px;                                    
+      498 +  border-radius: 50%;                                         
+      499 +  margin-right: 0.4em;                                        
+      500 +  vertical-align: middle;                                     
+      501 +  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.3);                
+      502 +}                                                             
+      503 +                                                              
+      504  /* ---------- Instances table ---------- */
+      505  
+      506  #instances {
+
+● Hard-reload the page (Ctrl+Shift+R). Under the entity summary you'll see a
+  Custom entities panel:
+
+  - + Add category prompts for a name (e.g. Animal, Ship, Species) and assigns a
+   colour you can change later
+  - Type a term in the dashed input and press Enter to add it (commas work for
+  pasting lists, e.g. Donkey, Zebra, Jenny Ass, Jackass, jungle-fowls)
+  - × on a chip removes that term; the ✕ button deletes the whole category
+  - Categories and terms persist in localStorage and apply across all letters
+  - Matches highlight in the transcription with your chosen colour, get a short
+  uppercase tag (first letters of the category name), join the entity summary
+  with a colour dot, populate the Instances table, and ship to CSV under your
+  category name
+  - Custom matches override built-in spaCy ones where they overlap, so you can
+  correct misclassifications (e.g. tag Jenny Asses as Animal even though spaCy
+  labelled it Person)
+
+✻ Cogitated for 1m 49s
+
+❯ I have added the entity and its cases into the text box but there is not      
+  change or not button on how to update it with this new entity                 
+  ⎿  ⧉ Selected 52 lines from index.html in Cursor
+
+● The terms are added when you press Enter inside the dashed input — that's
+  discoverable only via the placeholder text, which is a UX failure on my part.
+  Let me add an explicit + button beside the input and auto-save on blur, so
+  it's obvious.
+
+● Update(app.js)
+  ⎿  Added 4 lines, removed 1 line
+      109        </div>
+      110        <div class="cat-terms">
+      111          ${cat.terms.map(t => `<span class="term-chip" data-ter
+           m="${escapeHtml(t)}">${escapeHtml(t)} <button class="term-x" t
+           itle="remove">×</button></span>`).join("")}
+      112 -        <input class="term-input" type="text" placeholder="add
+          - term + Enter…" />                                            
+      112 +        <span class="term-input-wrap">                        
+      113 +          <input class="term-input" type="text" placeholder="t
+          +ype term, comma-separate for many" />                         
+      114 +          <button class="term-add" title="add term">+</button>
+      115 +        </span>                                               
+      116        </div>
+      117      `;
+      118      root.appendChild(card);
+
+● Update(app.js)
+  ⎿  Added 8 lines, removed 4 lines
+      141      });
+      142  
+      143      const input = card.querySelector(".term-input");
+      144 -    input.addEventListener("keydown", e => {                  
+      145 -      if (e.key !== "Enter") return;                          
+      146 -      e.preventDefault();                                     
+      144 +    const addBtn = card.querySelector(".term-add");           
+      145 +    const commit = () => {                                    
+      146        const val = input.value.trim();
+      147        if (!val) return;
+      148        const c = state.customCats.find(c => c.id === cat.id);
+      150 -      // split on commas in case user pastes a list           
+      149        for (const piece of val.split(",").map(s => s.trim()).fi
+           lter(Boolean)) {
+      150          if (!c.terms.includes(piece)) c.terms.push(piece);
+      151        }
+      152 +      input.value = "";                                       
+      153        saveCustom();
+      154        renderCustomPanel();
+      155        reloadCurrent();
+      156 +    };                                                        
+      157 +    input.addEventListener("keydown", e => {                  
+      158 +      if (e.key === "Enter") { e.preventDefault(); commit(); }
+      159      });
+      160 +    input.addEventListener("blur", () => { if (input.value.tri
+          +m()) commit(); });                                            
+      161 +    addBtn.addEventListener("click", commit);                 
+      162    }
+      163    refreshHighlightStyles();
+      164  }
+● Update(styles.css)
+  ⎿  Added 27 lines, removed 5 lines
+      479    padding: 0 0.1rem;
+      480  }
+      481  .term-x:hover { color: #7a1f37; }
+      482 +.term-input-wrap {                                            
+      483 +  display: inline-flex;                                       
+      484 +  align-items: stretch;                                       
+      485 +  border: 1px dashed var(--gold-dim);                         
+      486 +  border-radius: 999px;                                       
+      487 +  overflow: hidden;                                           
+      488 +  flex: 1;                                                    
+      489 +  min-width: 14em;                                            
+      490 +  background: transparent;                                    
+      491 +}                                                             
+      492 +.term-input-wrap:focus-within { border-style: solid; border-co
+          +lor: var(--gold); background: rgba(255,255,255,0.4); }        
+      493  .term-input {
+      494    font: inherit;
+      495    font-size: 0.88rem;
+      496    background: transparent;
+      486 -  border: 1px dashed var(--gold-dim);                         
+      487 -  border-radius: 999px;                                       
+      488 -  padding: 0.15rem 0.6rem;                                    
+      497 +  border: 0;                                                  
+      498 +  padding: 0.2rem 0.8rem;                                     
+      499    color: var(--ink);
+      490 -  min-width: 8em;                                             
+      500    flex: 1;
+      501 +  min-width: 6em;                                             
+      502  }
+      493 -.term-input:focus { outline: none; border-style: solid; border
+          --color: var(--gold); background: rgba(255,255,255,0.4); }     
+      503 +.term-input:focus { outline: none; }                          
+      504 +.term-add {                                                   
+      505 +  border: 0;                                                  
+      506 +  border-left: 1px solid var(--gold-dim);                     
+      507 +  background: rgba(214,178,114,0.25);                         
+      508 +  color: var(--ink);                                          
+      509 +  font-size: 1.1rem;                                          
+      510 +  line-height: 1;                                             
+      511 +  padding: 0 0.7rem;                                          
+      512 +  cursor: pointer;                                            
+      513 +  font-weight: 700;                                           
+      514 +}                                                             
+      515 +.term-add:hover { background: rgba(214,178,114,0.5); }        
+      516  
+      517  .h-dot {
+      518    display: inline-block;
+
+● Hard-reload (Ctrl+Shift+R). The term input now has a visible + button on the
+  right. Three ways to add:
+
+  - Type a term and click +
+  - Type a term and press Enter
+  - Type a term and click anywhere outside the field (it auto-commits on blur)
+
+  Commas split a list, so you can paste Donkey, Zebra, Jackass, Jenny Ass, 
+  jungle-fowls and click + once. After each commit the highlights in the letter
+  re-render automatically.
+
+✻ Cogitated for 34s
+
+※ recap: We're building a TEI-letter NER viewer with leather/parchment styling, spaCy entities, custom user categories, in-context instances, and CSV export. The term-input UX was just fixed with a visible + button. Next: hard-reload the page and try adding custom-category terms. (disable recaps in /config)
+
+● Background command "Start static HTTP server" was stopped

@@ -1,0 +1,48 @@
+{
+ "paragraphs": [
+  {
+   "segments": [
+    {
+     "text": "I received ",
+     "label": null
+    },
+    {
+     "text": "the day before yesterday",
+     "label": "date"
+    },
+    {
+     "text": " the appendix to the allotment Report & I am glad to see how eminently successful your men have been.— I have not",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "written to you, as I thought it would only have troubled & I was very sure that you need not be told how sincerely & deeply I have sympathised with you,—to whom I shall ever owe so much. Those old days when I used as an undergraduate to be so much at your house were certainly amongst the most happy & best days which I have ever spent. Never shall I forget to end of my life the uniform & very great kindness of poor dear Mrs. ",
+     "label": null
+    },
+    {
+     "text": "Henslow",
+     "label": "person"
+    },
+    {
+     "text": " to me.— I hope you are all well & that your health is pretty good: I have heard not a very good account of your appearance.— I beg you not to think of answering this note.",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "My dear friend & most kind old master | Believe me | Yours affectionately |Ch. ",
+     "label": null
+    },
+    {
+     "text": "Darwin",
+     "label": "person"
+    }
+   ]
+  }
+ ]
+}

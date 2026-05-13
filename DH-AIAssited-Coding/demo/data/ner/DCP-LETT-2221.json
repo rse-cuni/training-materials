@@ -1,0 +1,136 @@
+{
+ "paragraphs": [
+  {
+   "segments": [
+    {
+     "text": "I have not time to write to you ",
+     "label": null
+    },
+    {
+     "text": "today",
+     "label": "date"
+    },
+    {
+     "text": ", more than a word or two; but may mention that I packed off a box of specimens to your address by the ",
+     "label": null
+    },
+    {
+     "text": "Steamer",
+     "label": "person"
+    },
+    {
+     "text": " ‘Himalaya’, which left this on ",
+     "label": null
+    },
+    {
+     "text": "the 12th",
+     "label": "date"
+    },
+    {
+     "text": ". ulto. for ",
+     "label": null
+    },
+    {
+     "text": "England",
+     "label": "place"
+    },
+    {
+     "text": " viâ the ",
+     "label": null
+    },
+    {
+     "text": "Cape",
+     "label": "place"
+    },
+    {
+     "text": ". Also a lot of living bi〈rds〉 to Mr. ",
+     "label": null
+    },
+    {
+     "text": "J. Thompson",
+     "label": "person"
+    },
+    {
+     "text": ", brother of ",
+     "label": null
+    },
+    {
+     "text": "Thompson of the Z. Gns",
+     "label": "org"
+    },
+    {
+     "text": ", who is to make over certain Pigeons to you if they survive the voyage. ",
+     "label": null
+    },
+    {
+     "text": "A day or",
+     "label": "date"
+    },
+    {
+     "text": " two ago I saw a pair of adult hybrid ",
+     "label": null
+    },
+    {
+     "text": "Peafowl",
+     "label": "place"
+    },
+    {
+     "text": ", old enough to breed if capable of it, but the male not come to his full beauty as yet. The two species well combined. Neck intermediate in colouring, and facial skin white, with a large yellow spot. Crest intermediate, thus, \n    \n        \n     \nthe feathers [subeven]. The same native has also the Blue and ",
+     "label": null
+    },
+    {
+     "text": "Yellow Maccaw",
+     "label": "person"
+    },
+    {
+     "text": " breeding. I saw the hen upon her eggs, on the ground, underneath a raised [home].",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "In haste, Yours truly, | ",
+     "label": null
+    },
+    {
+     "text": "E. Blyth",
+     "label": "person"
+    },
+    {
+     "text": "—  ",
+     "label": null
+    },
+    {
+     "text": "C. Darwin Esq",
+     "label": "person"
+    },
+    {
+     "text": " | &c—",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "Down Bromley",
+     "label": "person"
+    },
+    {
+     "text": ", | ",
+     "label": null
+    },
+    {
+     "text": "Kent",
+     "label": "person"
+    },
+    {
+     "text": ".",
+     "label": null
+    }
+   ]
+  }
+ ]
+}

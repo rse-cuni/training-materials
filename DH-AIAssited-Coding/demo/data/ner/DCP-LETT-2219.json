@@ -1,0 +1,152 @@
+{
+ "paragraphs": [
+  {
+   "segments": [
+    {
+     "text": "I was in ",
+     "label": null
+    },
+    {
+     "text": "London",
+     "label": "place"
+    },
+    {
+     "text": " ",
+     "label": null
+    },
+    {
+     "text": "last week",
+     "label": "date"
+    },
+    {
+     "text": " & got ",
+     "label": null
+    },
+    {
+     "text": "Hewitson",
+     "label": "org"
+    },
+    {
+     "text": " all safe at ",
+     "label": null
+    },
+    {
+     "text": "Athenæum Club",
+     "label": "org"
+    },
+    {
+     "text": ". It is indeed magnificently bound & I am not surprised that you did not like to send it per post, & am only surprised that you would send it anyhow.— I was headachy & half-knocked up during all my stay & I found it impossible to look it over whilst in ",
+     "label": null
+    },
+    {
+     "text": "London &",
+     "label": "org"
+    },
+    {
+     "text": " so have brought it with me, & shall consult it deliberately for I have found more variability in Birds nests than I expected after I had put my notes together. I presume you are in no hurry, & so will leave it at Mr. ",
+     "label": null
+    },
+    {
+     "text": "Woods",
+     "label": "person"
+    },
+    {
+     "text": ", when next, in ",
+     "label": null
+    },
+    {
+     "text": "about 6 weeks",
+     "label": "date"
+    },
+    {
+     "text": ", when I go to ",
+     "label": null
+    },
+    {
+     "text": "London",
+     "label": "place"
+    },
+    {
+     "text": ".— Very many thanks for the loan.—",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "In your last note, what a funny fact that it of ",
+     "label": null
+    },
+    {
+     "text": "the Turkeys &",
+     "label": "org"
+    },
+    {
+     "text": " the frog: I think it will do to work in: I wish I knew about how old they were, but probably you will not recollect. How fine it would have been if they had squatted at the sight of the monster.—",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "You say that if you can anyhow manage it, you will this ",
+     "label": null
+    },
+    {
+     "text": "Spring",
+     "label": "date"
+    },
+    {
+     "text": " pay us a visit; it would really give ",
+     "label": null
+    },
+    {
+     "text": "Emma &",
+     "label": "org"
+    },
+    {
+     "text": " myself great pleasure; so do not forget & come if you can. I am not likely to be from home, ",
+     "label": null
+    },
+    {
+     "text": "this summer",
+     "label": "date"
+    },
+    {
+     "text": ", without it be sometimes for a fortnight to ",
+     "label": null
+    },
+    {
+     "text": "Moor Park",
+     "label": "place"
+    },
+    {
+     "text": ".— I think ",
+     "label": null
+    },
+    {
+     "text": "Etty",
+     "label": "person"
+    },
+    {
+     "text": " gets gradually rather stronger.",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "Farewell my dear old friend. If the spirit moves you at anytime to send me a line about yourself, glad shall I be. Ever yours | ",
+     "label": null
+    },
+    {
+     "text": "C. Darwin",
+     "label": "person"
+    }
+   ]
+  }
+ ]
+}

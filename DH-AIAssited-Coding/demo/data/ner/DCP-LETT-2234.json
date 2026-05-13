@@ -1,0 +1,128 @@
+{
+ "paragraphs": [
+  {
+   "segments": [
+    {
+     "text": "Prof. ",
+     "label": null
+    },
+    {
+     "text": "Smyth",
+     "label": "person"
+    },
+    {
+     "text": "’s observations on ",
+     "label": null
+    },
+    {
+     "text": "the Geology & Natural History of Teneriffe",
+     "label": "org"
+    },
+    {
+     "text": " do not appear to me precise enough, owing no doubt to the author’s attention having been directed to other objects, for publication in the Philosophical Transactions. For instance in the remarks on ",
+     "label": null
+    },
+    {
+     "text": "“Craters of Elevation",
+     "label": "bibl"
+    },
+    {
+     "text": "”, masses of ",
+     "label": null
+    },
+    {
+     "text": "rock & subordinate",
+     "label": "org"
+    },
+    {
+     "text": " craters are spoken of as of submarine origin, without any sort of evidence having been advanced: the continuity of not one single sheet of lava in the ancient cliffs of the great crater seems to have been noticed; the proportional width of the radial valleys to the whole crater is not noticed, &c.; and even the remarks on the subsided masses on one side of the ",
+     "label": null
+    },
+    {
+     "text": "Taoro",
+     "label": "org"
+    },
+    {
+     "text": " valley,—the most interesting case in the paper—are not given in sufficient detail for anyone, in my opinion, to judge whether they bear out the author’s view that the whole width of the valley has subsided. Nor do the observations on the ",
+     "label": null
+    },
+    {
+     "text": "Vegetation",
+     "label": "place"
+    },
+    {
+     "text": " appear to me sufficiently novel to deserve publication.",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "I would suggest that the Author should be asked to draw up an abstract for the Proceedings of any points actually observed by him, rather than of the conclusions, which he has arrived at from, as far as it appears, hardly sufficient grounds. The supposed marks of ancient ",
+     "label": null
+    },
+    {
+     "text": "Glaciers",
+     "label": "person"
+    },
+    {
+     "text": " should be noticed in any abstract, in order to draw the attention of any future observers. An abstract might be given on the rate of growth of the ",
+     "label": null
+    },
+    {
+     "text": "Dragon",
+     "label": "org"
+    },
+    {
+     "text": "-tree.—",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "Dear Sir | Yours faithfully | ",
+     "label": null
+    },
+    {
+     "text": "Ch",
+     "label": "person"
+    },
+    {
+     "text": ". ",
+     "label": null
+    },
+    {
+     "text": "Darwin",
+     "label": "person"
+    },
+    {
+     "text": "  To the | Secretary, ",
+     "label": null
+    },
+    {
+     "text": "Royal Society",
+     "label": "org"
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "P.S The paper is returned by the same ",
+     "label": null
+    },
+    {
+     "text": "Post",
+     "label": "org"
+    },
+    {
+     "text": ", which takes this.—",
+     "label": null
+    }
+   ]
+  }
+ ]
+}

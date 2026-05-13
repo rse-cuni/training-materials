@@ -1,0 +1,104 @@
+{
+ "paragraphs": [
+  {
+   "segments": [
+    {
+     "text": "I am very much obliged for your careful answer.— Your opinion agrees with ",
+     "label": null
+    },
+    {
+     "text": "Hooker’s & Bentham’s",
+     "label": "org"
+    },
+    {
+     "text": " (though I do not know whether question was put fairly to him) & H. ",
+     "label": null
+    },
+    {
+     "text": "C. Watson’s",
+     "label": "person"
+    },
+    {
+     "text": ". I have also written to ",
+     "label": null
+    },
+    {
+     "text": "Asa Gray",
+     "label": "person"
+    },
+    {
+     "text": ". My impression would have been, from animals, that monotypic forms were more interesting & had therefore been more attended to; ",
+     "label": null
+    },
+    {
+     "text": "Bunbury",
+     "label": "org"
+    },
+    {
+     "text": " took this view; but I bow to you several gentlemen who have had such large experience.—",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "You may like to hear what the facts of the case are: I have had tabulated several ",
+     "label": null
+    },
+    {
+     "text": "Floras",
+     "label": "person"
+    },
+    {
+     "text": " (yours amongst the rest) of all parts of world & 6 vols. of ",
+     "label": null
+    },
+    {
+     "text": "DeCandolles Prodromus & I",
+     "label": "org"
+    },
+    {
+     "text": " have divided all the species into two great sub-equal groups, & marked how many varieties or rather how many species presenting vars. have been recorded in each genus; & I find almost universally the large genera show a marked preponderance in the number of varieties. Until ",
+     "label": null
+    },
+    {
+     "text": "Hooker",
+     "label": "org"
+    },
+    {
+     "text": "’s suggestion I inferred from this that the species in the larger genera did really vary most; but now I see that my results are most seriously vitiated, perhaps rendered quite worthless.— You all, however, speak ",
+     "label": null
+    },
+    {
+     "text": "doubtfully & Hooker",
+     "label": "org"
+    },
+    {
+     "text": " had never thought of this, till I told him of my results, which has caused me a deal of trouble in vain.—",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "With my sincere thanks, pray believe me | Dear ",
+     "label": null
+    },
+    {
+     "text": "Babington",
+     "label": "place"
+    },
+    {
+     "text": " | Yours very sincerely | ",
+     "label": null
+    },
+    {
+     "text": "C. Darwin",
+     "label": "person"
+    }
+   ]
+  }
+ ]
+}

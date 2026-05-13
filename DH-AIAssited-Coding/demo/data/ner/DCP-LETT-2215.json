@@ -1,0 +1,276 @@
+{
+ "paragraphs": [
+  {
+   "segments": [
+    {
+     "text": "You have been very good about writing, for we like so much to hear all about the place & your companions &c.— I suppose the country is flat & ugly; so I fancy all ",
+     "label": null
+    },
+    {
+     "text": "Norfolk",
+     "label": "place"
+    },
+    {
+     "text": " is, but I never entered the county.— It looks here, as if you would have skating, which would be a good job.—",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "You must know that I have determined to sell the grey mare; for ",
+     "label": null
+    },
+    {
+     "text": "the other day",
+     "label": "date"
+    },
+    {
+     "text": " she started so violently in the tax-cart & ran up a bank that she very nearly upset the cart.— I shall try ",
+     "label": null
+    },
+    {
+     "text": "Mr Edwards &",
+     "label": "org"
+    },
+    {
+     "text": " offer her for 25£.— Perhaps you will say, as ",
+     "label": null
+    },
+    {
+     "text": "Lenny",
+     "label": "person"
+    },
+    {
+     "text": " did ",
+     "label": null
+    },
+    {
+     "text": "yesterday",
+     "label": "date"
+    },
+    {
+     "text": " to ",
+     "label": null
+    },
+    {
+     "text": "Mamma",
+     "label": "person"
+    },
+    {
+     "text": ", “Well that is cool to bag my chair”.— It will not be worth while to buy for ",
+     "label": null
+    },
+    {
+     "text": "Easter",
+     "label": "person"
+    },
+    {
+     "text": ", without something very good turned up, but we must look out before ",
+     "label": null
+    },
+    {
+     "text": "the summer holidays",
+     "label": "date"
+    },
+    {
+     "text": "; indeed it is very inconvenient for us being with only one horse.—",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "As ",
+     "label": null
+    },
+    {
+     "text": "Norfolk",
+     "label": "org"
+    },
+    {
+     "text": " is near ",
+     "label": null
+    },
+    {
+     "text": "Suffolk",
+     "label": "place"
+    },
+    {
+     "text": ", look out for me, whether there are near you any ",
+     "label": null
+    },
+    {
+     "text": "Suffolk Punches",
+     "label": "bibl"
+    },
+    {
+     "text": " or large Cart-Horses of a ",
+     "label": null
+    },
+    {
+     "text": "Chesnut",
+     "label": "person"
+    },
+    {
+     "text": " colour; if so please observe whether they have a dark stripe or band down the spine to root of tail; also for mere chance, whether any trace of a cross stripe on the shoulder, where the Donkey has, & any cross-stripes on the legs.",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "Next Tuesday",
+     "label": "date"
+    },
+    {
+     "text": " we all go up to ",
+     "label": null
+    },
+    {
+     "text": "London",
+     "label": "place"
+    },
+    {
+     "text": " for ",
+     "label": null
+    },
+    {
+     "text": "a few days",
+     "label": "date"
+    },
+    {
+     "text": "; the little Boys, however, not coming up till ",
+     "label": null
+    },
+    {
+     "text": "Wednesday",
+     "label": "date"
+    },
+    {
+     "text": " & we all stay till ",
+     "label": null
+    },
+    {
+     "text": "Saturday",
+     "label": "date"
+    },
+    {
+     "text": "; ",
+     "label": null
+    },
+    {
+     "text": "Mamma & Etty",
+     "label": "org"
+    },
+    {
+     "text": ", however, ",
+     "label": null
+    },
+    {
+     "text": "a few days",
+     "label": "date"
+    },
+    {
+     "text": " longer.— The little chaps are very full of the ",
+     "label": null
+    },
+    {
+     "text": "Conjurer",
+     "label": "place"
+    },
+    {
+     "text": ", ",
+     "label": null
+    },
+    {
+     "text": "Astley &",
+     "label": "org"
+    },
+    {
+     "text": " all. Thank goodness ",
+     "label": null
+    },
+    {
+     "text": "Lenny",
+     "label": "person"
+    },
+    {
+     "text": " has been quite hearty of late.",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "Lewis has very nearly finished everything in the new rooms, & I must have the Surveyor down & pay for all.— We have sent the ",
+     "label": null
+    },
+    {
+     "text": "Barberini",
+     "label": "place"
+    },
+    {
+     "text": " vase up to ",
+     "label": null
+    },
+    {
+     "text": "London",
+     "label": "place"
+    },
+    {
+     "text": " by ",
+     "label": null
+    },
+    {
+     "text": "Uncle Harry",
+     "label": "person"
+    },
+    {
+     "text": ", who was here on ",
+     "label": null
+    },
+    {
+     "text": "Saturday & Sunday",
+     "label": "date"
+    },
+    {
+     "text": ", to see whether we can sell it for a good price; & if we can, will it not be good for buying some nice Water-Colour drawings & framed with a good margin, & some of the best in the old drawing-room likewise new framed, will make the new Drawing Room look stunning.— After you have been some little time at Mr ",
+     "label": null
+    },
+    {
+     "text": "Wilson’s",
+     "label": "person"
+    },
+    {
+     "text": ", I shall like to hear how you get on with ",
+     "label": null
+    },
+    {
+     "text": "Mathematicks & Classics",
+     "label": "org"
+    },
+    {
+     "text": ".",
+     "label": null
+    }
+   ]
+  },
+  {
+   "segments": [
+    {
+     "text": "My dear old fellow | Yours affect | ",
+     "label": null
+    },
+    {
+     "text": "C. Darwin",
+     "label": "person"
+    }
+   ]
+  }
+ ]
+}
